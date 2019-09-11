@@ -3,6 +3,10 @@
 *.log
 *.out
 *.pdf
+*.gz
+
+# Unnessesary files
+papers/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
