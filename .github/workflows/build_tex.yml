@@ -19,4 +19,4 @@ jobs:
         cd tex
         pdflatex -interaction=nonstopmode -halt-on-error -output-directory ../_build diploma.tex
         pdflatex -interaction=nonstopmode -halt-on-error -output-directory ../_build diploma.tex
-        cd ..1
+        cd ..
