@@ -9,22 +9,13 @@ from typing import List
 
 import numpy as np
 
+from .analytics import TestResult
 from .analytics import TimesAnalyzer
 from .logger import logger
 
 
 class TestError(Exception):
     pass
-
-
-class TestResult:
-    def __init__(self, data_length: int = None, times: List[float] = None):
-        self.data_length = data_length
-        self.times = np.array(times)
-        self._analyzer = TimesAnalyzer(self.times)
-        self.stats = self._analyzer.stats
-        self.stats_95 = self._analyzer.stats_95
-        self.stats_99 = self._analyzer.stats_99
 
 
 def file_len(fname):
@@ -46,7 +37,7 @@ def test_once(program_path: Path, input_path: Path):
     return result
 
 
-def test_mapper(program_path: Path, input_path: Path, iterations=10):
+def test_mapper(program_path: Path, input_path: Path, iterations=10) -> TestResult:
     logger.info(
         f"Testing {program_path} on {input_path}, line count = {file_len(input_path)}"
     )

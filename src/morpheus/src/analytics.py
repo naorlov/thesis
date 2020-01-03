@@ -1,4 +1,16 @@
+from typing import List
+
 import numpy as np
+
+
+class TestResult:
+    def __init__(self, data_length: int = None, times: List[float] = None):
+        self.data_length = data_length
+        self.times = np.array(times)
+        self._analyzer = TimesAnalyzer(self.times)
+        self.stats = self._analyzer.stats
+        self.stats_95 = self._analyzer.stats_95
+        self.stats_99 = self._analyzer.stats_99
 
 
 class Stats:
@@ -38,8 +50,3 @@ class TimesAnalyzer:
         mask = self.time_list < percentile_value
         data = self.time_list[mask]
         return Stats(mean=np.mean(data), stddev=np.std(data), median=np.median(data))
-
-
-class DataAnalyzer:
-    def __init__(self,):
-        pass

@@ -7,14 +7,20 @@ import string
 regexp = re.compile("{[a-zA-Z0-9:-]*}")
 
 
-def random_string(length: str = None):
+def random_string(length_from: str = None, length_to: str = None):
     """
 
-    :param length: Длина строки
+    :param length_from: Длина строки
     :return: Случайная строка
     """
 
-    return "".join(random.choices(string.ascii_letters, k=int(length)))
+    if length_from and length_to:
+        count = random.randint(int(length_from), int(length_to))
+    elif length_from and not length_to:
+        count = int(length_from)
+    else:
+        count = 10
+    return "".join(random.choices(string.ascii_letters, k=int(count)))
 
 
 def random_int(lower: str = None, upper: str = None):
@@ -106,22 +112,26 @@ class SimpleStringGenerator:
         result = list()
         for _ in range(count):
             result.append(self._render_once())
-
-        if count == 1:
-            return result[0]
         return result
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("format_string")
-    parser.add_argument("output_file", type=Path)
-    parser.add_argument("count", type=int)
+    parser.add_argument("--output-file", type=Path, required=False)
+    parser.add_argument("--count", type=int, required=False, default=10)
 
     args = parser.parse_args()
 
     generator = SimpleStringGenerator(args.format_string)
+    result = generator.render(args.count)
 
+    if not args.output_file:
+        print(*result, sep="\n")
+        exit(0)
     with open(args.output_file, "w") as file:
-        result = generator.render(args.count)
         file.write("\n".join(result))
+
+
+if __name__ == "__main__":
+    main()
