@@ -5,6 +5,7 @@ from typing import List
 from src.analytics import TestResult
 from src.core import test_program
 from src.data_analyzer import DataAnalyzer
+from src.models import TestResultSchema
 
 
 class CLI:
@@ -15,12 +16,14 @@ class CLI:
         input_path: Path = None,
         input_template: str = None,
         test_result_path: Path = None,
+        count: int = None,
     ):
         self.executable_path = executable_path
         self.type = type
         self.input_path = input_path
         self.input_template = input_template
         self.test_result = test_result_path
+        self.count = count
 
         if not any((self.input_path, self.input_template)):
             raise ValueError("input-path or input-template arguments must be providen")
@@ -36,7 +39,9 @@ class CLI:
     def benchmark_over(self, test_files) -> List[TestResult]:
         results: List[TestResult] = list()
         for file in test_files:
-            results.append(test_program(self.executable_path, self.type, file))
+            results.append(
+                test_program(self.executable_path, self.type, file, self.count)
+            )
         return results
 
     def analyze(self, results):
@@ -47,14 +52,11 @@ class CLI:
     def run(self):
         test_files = self.get_input_files()
 
-        results = self.benchmark_over(test_files)
+        results: List[TestResult] = self.benchmark_over(test_files)
+
+        output = TestResultSchema().dump(results, many=True)
 
         if not self.test_result:
-            print(json.dumps(results, indent=4))
-        else:
-            with self.test_result.open("r") as file:
-                json.dump(results, file, indent=4)
+            print(json.dumps(output, indent=4, sort_keys=True))
 
         result_model = self.analyze(results)
-
-        print(result_model.coef)

@@ -1,4 +1,5 @@
 from typing import List
+from typing import Tuple
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -14,6 +15,7 @@ from src.analytics import TestResult
 #     lambda data: np.power(data, 2),  # square
 #     lambda data: np.power(data, 2),
 # ]
+
 
 class ModelWrapper:
     def __init__(self, trained_model: LinearRegression):
@@ -36,7 +38,9 @@ class DataAnalyzer:
         if self.mode != "linear":
             raise ValueError("Non-linear modes are not currently supported")
 
-    def _prepare_data(self, x: List[float], y: List[float]):
+    def _prepare_data(
+        self, x: List[float], y: List[float]
+    ) -> Tuple[np.array, np.array]:
         x = np.array(x).reshape(-1, 1)
         y = np.array(y).reshape(-1, 1)
         return x, y

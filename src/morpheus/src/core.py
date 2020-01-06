@@ -5,12 +5,8 @@ from statistics import mean
 from statistics import median
 from statistics import stdev
 from time import time
-from typing import List
-
-import numpy as np
 
 from .analytics import TestResult
-from .analytics import TimesAnalyzer
 from .logger import logger
 
 
@@ -39,7 +35,8 @@ def test_once(program_path: Path, input_path: Path):
 
 def test_mapper(program_path: Path, input_path: Path, iterations=10) -> TestResult:
     logger.info(
-        f"Testing {program_path} on {input_path}, line count = {file_len(input_path)}"
+        f"Testing {program_path.resolve().stem} on {input_path.resolve().stem},"
+        f" line count = {file_len(input_path)}"
     )
     times = list()
     for i in range(iterations):
@@ -57,7 +54,12 @@ def test_mapper(program_path: Path, input_path: Path, iterations=10) -> TestResu
         "median": median(times),
     }
 
-    result_data = TestResult(data_length=file_len(input_path), times=times)
+    result_data = TestResult(
+        data_length=file_len(input_path),
+        times=times,
+        executable_path=program_path,
+        test_file_path=input_path,
+    )
     return result_data
 
 
@@ -65,9 +67,9 @@ def test_reducer(program_path):
     pass
 
 
-def test_program(program_path, type, input_path):
+def test_program(program_path, type, input_path, count=None):
     if type == "mapper":
-        return test_mapper(Path(program_path), Path(input_path))
+        return test_mapper(Path(program_path), Path(input_path), count)
     elif type == "reducer":
         test_reducer(program_path)
     else:

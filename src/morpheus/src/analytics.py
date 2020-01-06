@@ -1,16 +1,25 @@
+from pathlib import Path
 from typing import List
 
 import numpy as np
 
 
 class TestResult:
-    def __init__(self, data_length: int = None, times: List[float] = None):
+    def __init__(
+        self,
+        data_length: int = None,
+        times: List[float] = None,
+        executable_path: Path = None,
+        test_file_path: Path = None,
+    ):
         self.data_length = data_length
         self.times = np.array(times)
         self._analyzer = TimesAnalyzer(self.times)
         self.stats = self._analyzer.stats
         self.stats_95 = self._analyzer.stats_95
         self.stats_99 = self._analyzer.stats_99
+        self._executable = executable_path.resolve()
+        self._test_file_path = test_file_path.resolve()
 
 
 class Stats:

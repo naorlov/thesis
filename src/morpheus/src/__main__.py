@@ -1,13 +1,16 @@
-import json
-from pathlib import Path
-
+import logging
+from src import logger
 from src.cli import CLI
 from .arguments import parser
-from .core import test_program
 
 
 def main():
     args = parser.parse_args()
+
+    if args.verbose:
+        logger.logger.setLevel(level=logging.DEBUG)
+    else:
+        logger.logger.setLevel(level=logging.ERROR)
 
     cli = CLI(
         executable_path=args.executable,
@@ -15,6 +18,7 @@ def main():
         input_path=args.input_path,
         input_template=args.input_template,
         test_result_path=args.test_result_path,
+        count=args.count,
     )
     cli.run()
 
