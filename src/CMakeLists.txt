@@ -1,1 +1,2 @@
 add_subdirectory(morpheus)
+add_subdirectory(datagen)

@@ -1,7 +1,7 @@
 from marshmallow import Schema
 from marshmallow import fields
 
-from build.lib.src.analytics import TestResult
+from .analytics import TestResult
 
 
 class StatsSchema(Schema):

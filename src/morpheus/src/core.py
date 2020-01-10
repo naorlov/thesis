@@ -8,7 +8,7 @@ from time import time
 
 from .analytics import TestResult
 from .logger import logger
-
+from progress.bar import Bar
 
 class TestError(Exception):
     pass
@@ -22,6 +22,7 @@ def file_len(fname):
 
 
 def test_once(program_path: Path, input_path: Path):
+    logger.debug(f'entered test_once')
     start_time = time()
     empty_time = time() - start_time
     # TODO: Calibrate timers
@@ -34,16 +35,15 @@ def test_once(program_path: Path, input_path: Path):
 
 
 def test_mapper(program_path: Path, input_path: Path, iterations=10) -> TestResult:
-    logger.info(
-        f"Testing {program_path.resolve().stem} on {input_path.resolve().stem},"
-        f" line count = {file_len(input_path)}"
-    )
+    logger.debug(f'Entered test_mapper')
     times = list()
+    bar = Bar(f'Testing with file {str(input_path.stem):15}', max=iterations)
     for i in range(iterations):
-        logger.info(f"Test iteration {i}")
         result_time = test_once(program_path, input_path)
         times.append(result_time)
-        logger.info(f"Took {result_time}")
+        bar.next()
+    bar.finish()
+
 
     result_data = {
         "data_length": file_len(input_path),
