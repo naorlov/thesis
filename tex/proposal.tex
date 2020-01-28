@@ -57,12 +57,12 @@
             kek
         \end{definition}
     \subsection{Background}
-
-    Since Google released a paper on MapReduce framework \cite{google_mapreduce}, a considerable amount of research was put on storing, processing and transformation of a lot amount of data. Today, big companies are producing hundreds of terabytes of data on daily basis.  
+    
+    Since Google released a paper on MapReduce framework \cite{google_mapreduce}, a considerable amount of research was put on developing systems that store, process and transform a big amount of data. Today, big companies are producing hundreds of terabytes of data on daily basis.  
 
     \subsection{Problem Statement}
 
-    Today, building bigdata processing cluster is not cheap. In order, to achieve maximum performance of MapReduce framework, one should have some hundreds of servers, build a networking solution for them, install all this hardware into the datacenter or build one and finally put in some people to maintain the system. 
+    Today, building bigdata processing cluster is not cheap. In order, to achieve maximum performance of MapReduce framework, one should have hundreds of servers, build a networking solution for them, install all this hardware into the datacenter or build one and finally put in some people to maintain the system. 
     
     The specific objective to this study is to build an open-source simulation platform to perform a cluster simulation with given hardware and software parameters. 
 
@@ -70,24 +70,27 @@
 
     \subsection{Professional Significance}
 
+    Having such an instrument that can accurately predict 
+
     \subsection{Delimitation of the study}
 
-    This study is aimed to simulate cluster with configurations that meet followinng requirements:
-    \begin{enumerate}
-        \item All servers in cluster have the same configuration.
-        \item Servers are grouped into multilayer network tree-shaped network.
-        \item 
-    \end{enumerate}
-
+    This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. We assume that n
     \section{Literature review}
         Up to now, a number of studies have proposed some techniques to build a MapReduce simulation models. 
 
 
     \section{Methods}
-        \TODO{Methods}
+        This project uses two main methods: simulation techniques and machine learning. When a user supplies us a MapReduce task description, we perform several steps to build a simulation.
+
+        First, a binary is tested to obtain performance statistics. Program is runned for 10 times. Each time several parameters are recorded, including, but not limited to total execution time, maximum memory use, etc. \TODO{what are we recording there?}. 
+        
+        Then this data is passed to \textit{Morpheus} analytics system. There an analytical model is built using collected data that approximates time and space complexity. More detailed explanation is given later.
+
+        An information about local computer is gathered, mainly a mean processor speed during execution and number of processor cycles during execution.
+        
 
     \section{Results anticipated}
-        \TODO{Results anticipaed}
+        \TODO{Results anticipated}
 
     \section{Conclusion}
         \TODO{Conclusion}
