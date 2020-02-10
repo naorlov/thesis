@@ -10,7 +10,6 @@
 
 namespace aphrodite
 {
-
 class PipelineStep
 {
 public:

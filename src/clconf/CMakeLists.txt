@@ -4,8 +4,10 @@ file(GLOB SOURCE src/*.cpp)
 include_directories(include)
 
 add_library(
-        aphrodite
+        clconf
         STATIC
         ${HEADERS}
         ${SOURCE}
 )
+
+target_link_libraries(clconf PRIVATE nlohmann_json::nlohmann_json)
