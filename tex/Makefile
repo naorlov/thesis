@@ -1,14 +1,14 @@
 all: proposal diploma 
 
 .ONESHELL:
-proposal : proposal.tex
+proposal:
 	mkdir -p build 
-	cp proposal.tex build
+	cp proposal.tex bibliography.bib build
 	cd build
-	pdflatex proposal.tex 1> pdflatex_1.logs
+	pdflatex -interaction=nonstopmode proposal.tex 1> pdflatex_1.logs
 	bibtex proposal 1> bibtex.logs
-	pdflatex proposal.tex 1> pdflatex_2.logs
-	pdflatex proposal.tex 1> pdflatex_3.logs
+	pdflatex -interaction=nonstopmode proposal.tex 1> pdflatex_2.logs
+	pdflatex -interaction=nonstopmode proposal.tex 1> pdflatex_3.logs
 	cd ..
 	cp build/proposal.pdf .
 

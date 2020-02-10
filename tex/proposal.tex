@@ -13,7 +13,7 @@
 
 \usepackage[backend=bibtex]{biblatex}
 
-\addbibresource{bibliography}
+\addbibresource{bibliography.bib}
 
 \newcommand*{\TODO}[1]{{\color{red}{TODO: \textit{#1}}}}
 
@@ -54,7 +54,7 @@
     \section{Introduction}
     \subsection{Definitions of key terms}
         \begin{definition}[kdf]
-            kek
+            \textit{Complexity function} for a given binary is a function that maps input size in bytes and lines to overall execution time, RAM usage, output file size in bytes and lines.
         \end{definition}
     \subsection{Background}
     
@@ -73,30 +73,47 @@
     Having such an instrument that can accurately predict 
 
     \subsection{Delimitation of the study}
-
+    \label{assumptions}
     This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. We assume that \TODO{Assumptions}.
 
     \section{Literature review}
-        Up to now, a number of studies have proposed some techniques to build a MapReduce simulation models. Two main approaches exists, as well as some combination of them. First, simulator system tries to evaluate tested propgram to build an \textit{analytical} model (i.e. a fuction that maps input dataset size to number of seconds that execution will take), or \textit{event simulator}, that simulates behaviour of specified MapReudce framework (mainly Apache Hadoop).
-
+    \label{literature_review}
+        Up to now, a number of studies have proposed some techniques to build a MapReduce simulation models. Two main approaches exists, as well as a combination of them. Firstly, simulator system tries to evaluate tested program to build an \textit{analytical} model (i.e. a fuction that maps input dataset size to number of seconds that execution will take). Secondly, simulator system uses \textit{event simulation} techinuque, trying to simulate the behaviour of specified MapReudce framework (mainly Apache Hadoop).
         
+        To simulatie the behaviour of a system several frameworks have been developed over the past 20 years. ROSS \cite{ross} and CODES \cite{codes} are used in a number of simulators \TODO{citiation}. 
+
+        Second approach is used in a number of studies \cite{yarnsim} \cite{baseline_model}, and has some benefits. While using this method researches can banlance between simulation time and simulation accuracy -- describing more aspects of a system leads to an increase in overall run time, whereas this time can be reduced by decreasing the "resolution" of simulation (i.e. number of entities, internal framework processes, etc).  
 
     \section{Methods}
-        This project uses two main methods: simulation techniques and machine learning. When a user supplies us a MapReduce task description, we perform several steps to build a simulation.
+        This project uses a mix of two approaches given in Section \ref{literature_review}.
 
-        First, a binary is tested to obtain performance statistics. Program is runned for 10 times. Each time several parameters are recorded, including, but not limited to total execution time, maximum memory use, etc. \TODO{what are we recording there?}. 
+        First, a binary is tested to obtain performance statistics. Program is run for 10 times. Each time several parameters are recorded, including but not limited to total execution time, maximum memory use, input and output data size, etc. \TODO{what are we recording there?}. 
         
-        Then this data is passed to \textit{Morpheus} analytics system. There an analytical model is built using collected data that approximates time and space complexity. More detailed explanation is given later.
+        Then this data is passed to \textit{Morpheus} analytics system. For all recorded parameters corresponding funcitons, describing the relation between input size and time, memory usage and output file size are built. Then, all gathered data is split between a training set and validation set. For given assumptions in Section \ref{assumptions} the \textit{Lambda} algorithm is used.
 
-        An information about local computer is gathered, mainly a mean processor speed during execution and number of processor cycles during execution.
+        \textit{Lambda} algorithm is proposed to find an analytical model for input/output parameters relationship. Since all tested programs are mappers and reducers, their complexity functions can be written as following:
+
+        \begin{equation}
+            f(n) = \sum_{i = 1}^d a_in^i + \sum_{i=1}^d b_in^i\log(n) + c
+        \end{equation}
+        where $a_i, b_i, c \in \mathbb{R}$, $d$ -- polynomial degree.
+
+        We could use Lagrange polynomial \TODO{citiation} to obtain a minimal polynomial that is fitted to given points, but we cannot obtain a suitable polynomial to extrapolate this function. Instead, all possible combinations of \textit{base polynomial} are used to fit a linear regression on ther associative coefficents. Then a model with the best $R^2$ metrics on validation data is chosen. This model is then treated as complexity function. 
+
+        Then analytical model is used in simulation agents of SimGrid framework, to tell exactely the amount of operations needed to be performed and amount of data is produced. 
+
+        Simulation agents are programmed to perform all steps of MapReduce operation as described in \cite{baseline_model}. 
         
 
     \section{Results anticipated}
-        \TODO{Results anticipated}
-
+        In this work we aim to at least 10 \% accuracy when an execution time of popular MapReduce benchmarks like Terasort \TODO{citiation}, MRBench \TODO{citiation}
+        %https://www.researchgate.net/publication/221040832_MRBench_A_Benchmark_for_Map-Reduce_Framework
+        is predicted. 
     \section{Conclusion}
         \TODO{Conclusion}
 
     \printbibliography
 
 \end{document}
+
+
