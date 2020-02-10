@@ -30,7 +30,7 @@
 
 
 \begin{document}
-    \title{DRAFT: Framework for Simulation of Distributed Systems}
+    \title{DRAFT: Simulating execution of MapReduce applications}
 
     \author{
         \IEEEauthorblockN{Nikita Orlov}
@@ -50,7 +50,7 @@
     \begin{IEEEkeywords}
         \TODO{Keywords}
     \end{IEEEkeywords}
-
+    \TODO{remove subsections}
     \section{Introduction}
     \subsection{Definitions of key terms}
         \begin{definition}[kdf]
@@ -60,21 +60,24 @@
     
     Since Google released a paper on MapReduce framework \cite{google_mapreduce}, a considerable amount of research was put on developing systems that store, process and transform a big amount of data. Today, big companies are producing hundreds of terabytes of data on daily basis.  
 
-    \subsection{Problem Statement}
 
     Today, building bigdata processing cluster is not cheap. In order, to achieve maximum performance of MapReduce framework, one should have hundreds of servers, build a networking solution for them, install all this hardware into the datacenter or build one and finally put in some people to maintain the system. 
     
+    
+
+    \subsection{Problem Statement}
     The specific objective to this study is to build an open-source simulation platform to perform a cluster simulation with given hardware and software parameters. 
 
-    Several papers are released on this topic, but they do not provide any code \cite{baseline_model} or did not updated for a couple of years \cite{yarnsim} and are outdated.
 
+    \TODO{Problem statement}.
     \subsection{Professional Significance}
-
+    Several papers are released on this topic, but they do not provide any code \cite{baseline_model} or did not updated for a couple of years \cite{yarnsim} and are outdated
     Having such an instrument that can accurately predict 
 
     \subsection{Delimitation of the study}
     \label{assumptions}
-    This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. We assume that \TODO{Assumptions}.
+    This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. We assume that 
+    \TODO{Assumptions}.
 
     \section{Literature review}
     \label{literature_review}
@@ -106,7 +109,7 @@
         
 
     \section{Results anticipated}
-        In this work we aim to at least 10 \% accuracy when an execution time of popular MapReduce benchmarks like Terasort \TODO{citiation}, MRBench \TODO{citiation}
+        In this work we aim to at least ---- accuracy when an execution time of popular MapReduce benchmarks like Terasort \TODO{citiation}, MRBench \TODO{citiation}
         %https://www.researchgate.net/publication/221040832_MRBench_A_Benchmark_for_Map-Reduce_Framework
         is predicted. 
     \section{Conclusion}
