@@ -1,14 +1,11 @@
-\documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
-% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
-\usepackage{graphicx}
-\usepackage{textcomp}
-\usepackage{xcolor}
+\documentclass[conference]{IEEEtran} \IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote.
+% If that is unneeded, please comment it out.
+\usepackage{amsmath,amssymb,amsfonts} \usepackage{algorithmic}
+\usepackage{graphicx} \usepackage{textcomp} \usepackage{xcolor}
 \usepackage{icomma}
 % \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-%     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+% T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
 \usepackage[backend=bibtex]{biblatex}
@@ -18,101 +15,160 @@
 \newcommand*{\TODO}[1]{{\color{red}{TODO: \textit{#1}}}}
 
 
-\newtheorem{oldlem}{Лемма}[section]
-\newenvironment{lemma}[1][]
-    {\begin{oldlem}[#1]}
-    {\end{oldlem}}
+\newtheorem{oldlem}{Лемма}[section] \newenvironment{lemma}[1][]
+{\begin{oldlem}[#1]} {\end{oldlem}}
 
-\newtheorem{olddefi}[oldlem]{Definition}
-\newenvironment{definition}[1][]
-    {\begin{olddefi}\normalfont}
-    {\end{olddefi}}
+\newtheorem{olddefi}[oldlem]{Definition} \newenvironment{definition}[1][]
+{\begin{olddefi}\normalfont} {\end{olddefi}}
 
 
-\begin{document}
-    \title{DRAFT: Simulating execution of MapReduce applications}
+\begin{document} \title{DRAFT: Simulating execution of MapReduce applications}
 
-    \author{
-        \IEEEauthorblockN{Nikita Orlov}
-        \IEEEauthorblockA{
-            \textit{Higher School of Economics} \\
-            Moscow, Russia \\
-            naorlov\_1@edu.hse.ru
-        }
+    \author{ 
+        \IEEEauthorblockN{Nikita Orlov} 
+        \IEEEauthorblockA{ 
+            \textit{Higher School of Economics} \\ 
+            Moscow, Russia \\ 
+            naorlov\_1@edu.hse.ru 
+        } 
     }
 
     \maketitle
 
-    \begin{abstract}
-        \TODO{Abstract}
+    \begin{abstract} 
+        \TODO{Abstract} 
     \end{abstract}
 
-    \begin{IEEEkeywords}
-        \TODO{Keywords}
+    \begin{IEEEkeywords} 
+        \TODO{Keywords} 
     \end{IEEEkeywords}
+    
     \TODO{remove subsections}
-    \section{Introduction}
+
+    \section{Introduction} 
+    
     \subsection{Definitions of key terms}
-        \begin{definition}[kdf]
-            \textit{Complexity function} for a given binary is a function that maps input size in bytes and lines to overall execution time, RAM usage, output file size in bytes and lines.
-        \end{definition}
+    
+    \begin{definition}[kdf] 
+        \textit{Complexity function} for a given binary is a function that maps
+        input size in bytes and lines to overall execution time, RAM usage,
+        output file size in bytes, and rows. 
+    \end{definition}
+    
     \subsection{Background}
+
+    Since Google released a paper on the MapReduce framework
+    \cite{google_mapreduce}, a considerable amount of research was put on
+    developing systems that store, process, and transform a significant amount
+    of data. Today, big companies are producing hundreds of terabytes of data
+    on a daily basis.  
+
+
+    Today, building a big data processing cluster is not cheap. In order to
+    achieve maximum performance of the MapReduce framework, one should have
+    hundreds of servers, establish a networking solution for them, install all
+    this hardware into the data center or build one, and finally put in some
+    people to maintain the system. 
     
-    Since Google released a paper on MapReduce framework \cite{google_mapreduce}, a considerable amount of research was put on developing systems that store, process and transform a big amount of data. Today, big companies are producing hundreds of terabytes of data on daily basis.  
-
-
-    Today, building bigdata processing cluster is not cheap. In order, to achieve maximum performance of MapReduce framework, one should have hundreds of servers, build a networking solution for them, install all this hardware into the datacenter or build one and finally put in some people to maintain the system. 
-    
     
 
-    \subsection{Problem Statement}
-    The specific objective to this study is to build an open-source simulation platform to perform a cluster simulation with given hardware and software parameters. 
+    \subsection{Problem Statement} 
+    
+    The specific objective of this study is to build an open-source simulation
+    platform to perform a cluster simulation with given hardware and software
+    parameters. \TODO{Problem statement}. 
+    
+    \subsection{Professional Significance} 
+    
+    Several papers are released on this topic, but they do not provide any code
+    \cite{baseline_model} or did not updated for a couple of years and are
+    outdated\cite{yarnsim}.  Having such an instrument that can accurately
+    predict 
+
+    \subsection{Delimitation of the study} 
+    \label{assumptions} 
+
+    This study is aimed to simulate and predict execution times for a
+    homogenous MapReduce cluster. We assume that \TODO{Assumptions}.
+
+    \section{Literature review} 
+    \label{literature_review} 
 
 
-    \TODO{Problem statement}.
-    \subsection{Professional Significance}
-    Several papers are released on this topic, but they do not provide any code \cite{baseline_model} or did not updated for a couple of years \cite{yarnsim} and are outdated
-    Having such an instrument that can accurately predict 
-
-    \subsection{Delimitation of the study}
-    \label{assumptions}
-    This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. We assume that 
-    \TODO{Assumptions}.
-
-    \section{Literature review}
-    \label{literature_review}
-        Up to now, a number of studies have proposed some techniques to build a MapReduce simulation models. Two main approaches exists, as well as a combination of them. Firstly, simulator system tries to evaluate tested program to build an \textit{analytical} model (i.e. a fuction that maps input dataset size to number of seconds that execution will take). Secondly, simulator system uses \textit{event simulation} techinuque, trying to simulate the behaviour of specified MapReudce framework (mainly Apache Hadoop).
+    Up to now, several studies have proposed some techniques to build MapReduce
+    simulation models. Two main approaches exist, as well as a combination of
+    them. Firstly, the simulator system tries to evaluate the tested program to
+    build an analytical model (i.e., a function that maps input dataset size to
+    an amount of time that the execution will take). Secondly, the simulator
+    system uses the event simulation technique, trying to simulate the behavior
+    of the specified MapReduce framework (mainly Apache Hadoop).
         
-        To simulatie the behaviour of a system several frameworks have been developed over the past 20 years. ROSS \cite{ross} and CODES \cite{codes} are used in a number of simulators \TODO{citiation}. 
+    Several simulation frameworks have been developed over the past 20 years.
+    ROSS and CODES are used in some simulators. \TODO{citiation}. 
 
-        Second approach is used in a number of studies \cite{yarnsim} \cite{baseline_model}, and has some benefits. While using this method researches can banlance between simulation time and simulation accuracy -- describing more aspects of a system leads to an increase in overall run time, whereas this time can be reduced by decreasing the "resolution" of simulation (i.e. number of entities, internal framework processes, etc).  
+    The second approach is used in some studies and has some benefits. While
+    using this method, researches can balance between simulation time and
+    simulation accuracy - describing more aspects of a system leads to an
+    increase in overall run time. In contrast, this time can be reduced by
+    decreasing the "resolution" of simulation (i.e., the number of entities,
+    internal framework processes, etc.).   
 
-    \section{Methods}
-        This project uses a mix of two approaches given in Section \ref{literature_review}.
 
-        First, a binary is tested to obtain performance statistics. Program is run for 10 times. Each time several parameters are recorded, including but not limited to total execution time, maximum memory use, input and output data size, etc. \TODO{what are we recording there?}. 
+    \section{Methods} 
+
+    This project uses a mix of two approaches given in Section
+    \ref{literature_review}.
+
+    First, a binary is tested to obtain performance statistics. The program is
+    run ten times. Each time several parameters are recorded, including but
+    not limited to total execution time, maximum memory use, input, and output
+    data size, etc. \TODO{what are we recording there?}. 
+
+    Then this data is passed to the \textit{Morpheus} analytics system. For all
+    recorded parameters, corresponding functions, describing the relation
+    between input size and time, memory usage, and output file size, are built.
+    Then, all the gathered data is split between a training set and a
+    validation set. For the given assumptions in Section \ref{assumptions}, the
+    \textit{Lambda} algorithm is used.
+
+
+    \textit{Lambda} algorithm is proposed to find an analytical model for
+    input/output parameters relationship. Since all tested programs are mappers
+    and reducers, their complexity functions can be written as follows:
+
+    \begin{equation} 
+        f(n) = \sum_{i = 1}^d a_in^i + \sum_{i=1}^d b_in^i\log(n) + c 
+    \end{equation} 
+
+    where $a_i, b_i, c \in \mathbb{R}$, $d$ -- polynomial degree.
+
+
+    We could use Lagrange polynomial \TODO{citiation} to obtain a minimal
+    polynomial that is fitted to given points, but we cannot get a suitable
+    polynomial to extrapolate this function. Instead, all possible combinations
+    of the \textit{base polynomial} are used to fit a linear regression on
+    their associative coefficients. Then a model with the best $R^2$ metrics on
+    validation data is chosen. This model is then treated as a complexity
+    function. 
+
+
+    Then the analytical model is used in simulation agents of SimGrid framework
+    to tell precisely the amount of operations needed to be performed, and the
+    amount of data is produced. 
+
+    Simulation agents are programmed to perform all steps of MapReduce
+    operation, as described in \cite{baseline_model}.
         
-        Then this data is passed to \textit{Morpheus} analytics system. For all recorded parameters corresponding funcitons, describing the relation between input size and time, memory usage and output file size are built. Then, all gathered data is split between a training set and validation set. For given assumptions in Section \ref{assumptions} the \textit{Lambda} algorithm is used.
 
-        \textit{Lambda} algorithm is proposed to find an analytical model for input/output parameters relationship. Since all tested programs are mappers and reducers, their complexity functions can be written as following:
-
-        \begin{equation}
-            f(n) = \sum_{i = 1}^d a_in^i + \sum_{i=1}^d b_in^i\log(n) + c
-        \end{equation}
-        where $a_i, b_i, c \in \mathbb{R}$, $d$ -- polynomial degree.
-
-        We could use Lagrange polynomial \TODO{citiation} to obtain a minimal polynomial that is fitted to given points, but we cannot obtain a suitable polynomial to extrapolate this function. Instead, all possible combinations of \textit{base polynomial} are used to fit a linear regression on ther associative coefficents. Then a model with the best $R^2$ metrics on validation data is chosen. This model is then treated as complexity function. 
-
-        Then analytical model is used in simulation agents of SimGrid framework, to tell exactely the amount of operations needed to be performed and amount of data is produced. 
-
-        Simulation agents are programmed to perform all steps of MapReduce operation as described in \cite{baseline_model}. 
-        
-
-    \section{Results anticipated}
-        In this work we aim to at least ---- accuracy when an execution time of popular MapReduce benchmarks like Terasort \TODO{citiation}, MRBench \TODO{citiation}
+    \section{Results anticipated} 
+    In this work we aim to at least ---- accuracy
+    when an execution time of popular MapReduce benchmarks like Terasort
+    \TODO{citiation}, MRBench \TODO{citiation}
         %https://www.researchgate.net/publication/221040832_MRBench_A_Benchmark_for_Map-Reduce_Framework
-        is predicted. 
-    \section{Conclusion}
+        is predicted.  
+
+
+    \section{Conclusion} 
         \TODO{Conclusion}
 
     \printbibliography
