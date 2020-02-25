@@ -1,14 +1,19 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,14pt]{article}
 
 \input{header}
 
+\usepackage{biblatex}
+%\bibliographystyle{gost2008}
+\addbibresource{./bibliography.bib}
+
 \begin{document}
-    \author{nikita orlov}
-    \title{diploma}
+    \author{Орлов Никита}
+    \title{Имитационное моделирование распределенных систем}
     \maketitle
-    
-    Hello world!
-    
+
+    \subfile{sections/litretature_review.tex}
+
+    \printbibliography
 \end{document}
 
 
