@@ -8,9 +8,10 @@
 % T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
-\usepackage[backend=bibtex]{biblatex}
+\usepackage[backend=bibtex, sorting=none]{biblatex}
 
 \addbibresource{bibliography.bib}
+\bibliographystyle{ieeetr}
 
 \newcommand*{\TODO}[1]{{\color{red}{TODO: \textit{#1}}}}
 
@@ -27,7 +28,7 @@
     \author{ 
         \IEEEauthorblockN{Nikita Orlov} 
         \IEEEauthorblockA{ 
-            \textit{Higher School of Economics} \\ 
+            \textit{HSE University} \\ 
             Moscow, Russia \\ 
             naorlov\_1@edu.hse.ru 
         } 
@@ -36,80 +37,206 @@
     \maketitle
 
     \begin{abstract} 
-        A new method of MapReduce simulation is proposed combining event-discrete simulatros and analytical models, that are built on the fly from data, gathered with a help of performance benchmarks.
+    A new method of MapReduce simulation is proposed combining
+    event-discrete simulatros and analytical models, that are built on the fly
+    from data, gathered with a help of performance benchmarks.
     \end{abstract}
 
     \begin{IEEEkeywords} 
         MapReduce, simulation, analytical model, event discrete simulator
     \end{IEEEkeywords}
 
-    \section{Introduction} 
+    \section{Introduction}
+    In 2004 Google released a paper \cite{google_mapreduce} on the new data
+    processing framework called MapReduce. It is capable of processing a
+    significant amount of data that is not processed on a single machine with
+    the help of two processing stages: map and reduce. On the map stage, input
+    data is processed, and tuples consisting of keys and values are outputted
+    to reduce stage, where input data is grouped by key and processed as a
+    single batch of data. Authors claim that a vast majority of algorithms
+    could be written using MapReduce jobs -- a Map step followed by Reduce
+    step, possibly a number of these jobs. Many interfaces for MapReduce have
+    been developed over a past decade -- Apache Hadoop \cite{apache_hadoop} (distributed application
+    execution engine and MapReduce engine), Apache Hive \cite{apache_hive} (a SQL-like data
+    manipulation language), Amazon Elastic MapReduce \cite{amazon_emr} (cloud MapReduce solution
+    for on-demand data processing) are popular ones. MapReduce is also used as
+    a programming paradigm on top of other storage solutions, like a NoSQL
+    database Apache CouchDB \cite{apache_couchdb}, that can execute MapReduce tasks over stored data.
 
+    Since Google released the paper \cite{google_mapreduce} on MapReduce, a considerable amount of
+    research was put on developing systems that store, process, and transform a
+    significant amount of data. Today, big companies are producing hundreds of
+    terabytes of data on a daily basis. With the help of MapReduce and related
+    work, this data can be processed in a matter of minutes, giving businesses
+    and individuals an opportunity to perform more complex data analysis. 
 
-    Since Google released a paper on the MapReduce framework \cite{google_mapreduce}, a considerable amount of research was put on developing systems that store, process, and transform a significant amount of data. Today, big companies are producing hundreds of terabytes of data on a daily basis. 
+    Several papers are released on this topic, but they do not provide any
+    code, or the code is not updated for a couple of years and is outdated.
+    Having such a tool that can accurately predict execution time can be useful
+    in different use cases. For example, one could develop several scheduling
+    algorithms and quickly test them in simulation. Another possible use is to
+    determine the best cluster configuration for new MapReduce cluster -- one
+    could take existing tasks and look through various cluster configurations.
 
-
-
-    The specific objective of this study is to build an open-source platform to perform a cluster simulation with given hardware and software parameters.
-
-    Several papers are released on this topic, but they do not provide any code or did not updated for a couple of years and are outdated. Having such an instrument that can accurately predict execution time can be useful in some situations. TODO(citation). 
-
-    This study is aimed to simulate and predict execution times for a homogenous MapReduce cluster. No assumption is made about input mappers and reducers, their input and output data distribution. However, cluster homogeneity is assumed.
+    This study is aimed to build a framework for accurate simulation and
+    prediction of execution times for a user-provided MapReduce applicaiton on
+    a homogenous MapReduce cluster. We make no assumptions about Map and Reduce
+    stage implementations, their input and output data size and distribution.
+    However, cluster is assumed to be homogenous (i.e. every server has the
+    same number of CPU cores, RAM size, I/O configuration), since these
+    clusters are both cheaper to build and operate when compared to
+    heterogeneous environments and more popular among existing MapReduce
+    installations.
 
     \section{Literature review} 
     \label{literature_review} 
 
+    For the past decade, several studies have proposed techniques to model the
+    execution of MapReduce applications. They can be differentiated by used
+    modelling method. 
 
-    For the past decade, several studies have proposed techniques to build a MapReduce simulator. They can be differentiated by the simulation method. 
+    \textit{Discrete-event simulation} is a method that represents a system's
+    operation as an ordered list of events. Every event contains its timestamp,
+    representing \textit{event time} at which event took place. The simulation
+    engine algorithm is straightforward: it sets the current time to 0 and
+    iterates over a set of events, on each step advancing current time. When
+    the simulation is completed, the engine reports a total simulation time, as
+    well as several runtime statistics. While using this method, researches can
+    balance between time took by simulator and prediction error. Describing
+    more aspects of a system leads to an increase in the overall simulation run
+    time, while increasing simulation accuracy, and in the opposite, simulation
+    time can be reduced by decreasing the temporal resolution of simulation
+    (mainly by reducing the number of events, as well as the number of
+    entities, internal framework processes).
 
-    Discrete-event modelling is a method that represents the system's operation in a system as an ordered list of events in a system. Every event contains its timestamp, representing event time at which event took place. The simulation engine algorithm is straightforward: it sets the current time to 0 and iterates over a set of events, on each step advancing current time. When the simulation is completed, the engine reports a total simulation time, as well as several statistics. While using this method, researches can balance between simulation time and simulation accuracy - describing more aspects of a system leads to an increase in overall run time. In contrast, this time can be reduced by decreasing the "resolution" of simulation (i.e., the number of entities, internal framework processes).
+    ROSS \cite{ross} (Rensselaer Optimistic Simulation System) is an example of parallel
+    discrete-event simulator. It is used by CODES \cite{codes}, an I/O and storage emulator,
+    that allows building an accurate model of exascale storage solutions. These
+    frameworks are used in several simulators (i.e., BTeHadoop2 \cite{baseline_model}).
 
-    ROSS (Rensselaer Optimistic Simulation System) is an example of parallel discrete-event simulator. It is used by CODES as an essential event modelling framework. CODES itself is an I/O and storage emulator that allows building an accurate emulation of exascale storage solutions.
+    SimGrid \cite{simgrid} is a low-level simulation framework for simulating complex 
+    multi-server environment. It uses its own implementation of a parallel discrete-event simulator as described in book by Fujimoto, Richard \cite{fujimoto_parallel_1990}.
 
-    Analytical modelling is a method that uses a set of performance equations that can predict the system's performance. 
+    \textit{Analytical modelling} is a method that uses a set of performance
+    equations that can predict execution times for different parts of the
+    MapReduce system, including mappers and reducers. In most of the cases,
+    these equations are built from user defined constants on predefined
+    equations. Some of the simulators, like BTeHadoop2 \cite{baseline_model}, build these equations
+    based on performance benchmarks of supplied MapReduce job description.
 
-    Some existing simulators are based on discrete-event modelling, like Mumak, SimMR, MRperf, MRSG and MRsim. 
+    Some existing simulators are based on \textit{discrete-event modelling},
+    like Mumak \cite{mumak}, SimMR \cite{simmr}, MRperf \cite{mrperf}, MRSG \site{mrsg}, YarnSim \cite{yarnsim} and MRSim \cite{mrsim}. They all share the same
+    principle: the core of the MapReduce system is simulated, where
+    user-supplied mappers and reducers characteristics are taken either from
+    execution benchmarks or from the user-provided information. MRPerf assumes
+    that every job is a single mapper-reducer pair, and their corresponding
+    outputs size and execution time are dependent only on input size and not
+    the contents of input data. 
 
-    In contrary, Starfish is based on analytical modelling technique.
+    In contrary, Song et al. \cite{song} proposed a method that is based on \textit{an
+    analytical modelling} technique. They gather some metadata about the
+    supplied MapReduce job and pass them to predefined model that estimates
+    execution time. MRSim uses this technique while modelling mapper and
+    reducer job, relying on user-provided constants output sizes and execution
+    cost. YARNSim uses a predefined model for the map and reduce stages,
+    providing a configurable parameter for corresponding input sizes. SLS \cite{sls} 
+    is an Apahce YARN\cite{apache_yarn} scheduler simulator capable of experimenting with various scheduling 
+    algorithms.
 
-    Another way to differentiate is to consider a system design and simulation scope: Mumak and SLS are scheduler simulators, and MRperf, MRSG and MRsim are task execution engine simulators.
+    Another way to differentiate is to consider a system design and simulation
+    scope: Mumak and SLS\cite{sls} are scheduler simulators, mainly used to study
+    different scheduling algorithms, and MRperf, MRSG and MRsim are task
+    execution engine simulators, providing a tool for studying different
+    cluster architectures.
 
 
     \section{Methods} 
 
+    This project uses a mix of two approaches given in Section \ref{literature_review}.
 
-    This project uses a mix of two approaches given in previous section.
+    First, the application's mapper and reducer programs are tested to obtain
+    performance statistics. The program is run ten times. Each time several
+    parameters are recorded, including but not limited to total execution time,
+    maximum memory use, input, and output data size.
 
-    First, a binary is tested to obtain performance statistics. The program is run ten times. Each time several parameters are recorded, including but not limited to total execution time, maximum memory use, input, and output data size.
+    Then this data is passed to the Morpheus analytics system. It builds
+    complexity functions for a given executable file. Complexity function for a
+    given executable program is a function that maps input size in bytes and
+    rows to overall execution time, RAM usage, output file size in bytes and
+    rows. Then, all the gathered data is split between a training set and a
+    validation set. For the given assumptions in the previous section, the
+    Lambda algorithm is used.
 
-    \begin{definition}
-        \textit{Complexity function} for a given executable program is a function that maps input size in bytes and lines to overall execution time, RAM usage, output file size in bytes and rows.
-    \end{definition}
-
-    Then this data is passed to the \textit{Morpheus} analytics system. It builds complexity functions for a given executable file. Then, all the gathered data is split between a training set and a validation set. For the given assumptions in previous sections, the Lambda algorithm is used.
-
-    \textit{Lambda} algorithm is proposed to find an analytical model for input/output parameters relationship. Since all tested programs are mappers and reducers, their complexity functions can be written as follows:
-
+    Lambda algorithm is proposed to find an analytical model for input/output
+    parameters relationship. We assume that all tested programs are mappers and
+    reducers, and their complexity functions can be written as follows:
+    
     \begin{equation} 
-        f(n) = \sum_{i = 1}^d a_in^i + \sum_{i=1}^d b_in^i\log(n) + c 
+        f(n) = \sum_{i = 0}^d a_in^i + \sum_{i=0}^d b_in^i\log(n)
     \end{equation} 
+    
+    where $a_i, b_i \in \mathbb{R}$, $d_l, d_n$ - degree of freedom for linear 
+    and logarithmic part. For any reasonable purposes we can assume 
+    $d_l, d_n \leqslant 10$. 
 
-    where $a_i, b_i, c \in \mathbb{R}$, $d$ -- polynomial degree.
+    These assumptions come from mapper's and reducer's primary purpose. Mapper
+    reads data and outputs corresponding key-value tuples, therefore it has to
+    at least read all input data and produce output, contributing to $O(n)$
+    complexity.  During the data scan, the mapper can build a dictionary to
+    check for already lookup data, or sort data internally, contributing to
+    $O(n)\cdot O(\log n)$ complexity.  he constant factor is added to support
+    mappers with external dictionary lookups and other similar tasks, that are
+    not dependent on mapper's input data size. Reducer reads mapper's output
+    grouped by key and outputs final value for any given key.  It also can
+    perform similar operations with constant, logarithmic, linear and $n^k
+    \cdot \log n$ time-space complexity (i.e. input data or external dictionary
+    lookups, sorting, multiplying output rows).
 
-    For any reasonable purposes, we can assume ​.
+    Other methods could be investigated for building an analytical model from
+    gathered data, for example, Lagrange polynomial, but this is not a suitable
+    solution for building a function that could accurately predict execution
+    times for input sizes beyond the maximum observed point. For example, if we
+    take a quadratic function, sample values of the function at six different
+    points and calculate Lagrange polynomial for these points, we will get a
+    6-degree polynomial incapable of predicting original function at other
+    points. 
 
-    We could use Lagrange polynomial (citation) to obtain a minimal polynomial that is fitted to given points, but we cannot get a suitable polynomial to extrapolate this function. For example, if we have a quadratic function and we sample 6 points from it, we will get a 6-degree polynomial. Instead, all possible combinations of the base polynomial are used to fit a linear regression on their associative coefficients. Then a model with the best metrics on validation data is chosen. This model is then treated as a complexity function.
+    Within the proposed method, all possible combinations of the base
+    polynomial are used to fit a linear regression on their associative
+    coefficients. Then a model with the best $R^2$ metrics on validation data
+    is chosen. This model is then treated as a complexity function.
 
-    Then the analytical model is used in simulation agents of SimGrid framework to tell precisely the amount of operations needed to be performed, and the amount of data is produced.
+    Then the analytical model is used in simulation agents of SimGrid\cite{simgrid} framework
+    to tell precisely the amount of operations needed to be performed, and the
+    amount of data is produced.
 
-    Simulation agents are programmed to perform all steps of MapReduce operation, as described in \cite{baseline_model}.
-        
+    Simulation agents used in SimGrid are programmed to perform all execution
+    steps for a given MapReduce job. Apache Hadoop framework is chosen as an
+    architecture simulated due to the fact that this framework is open-source
+    and well documented, so we can accurately model its components. 
+
 
     \section{Results anticipated}
 
-    It is hoped that the end result of this study will be a complete MapReduce simulation solution, that will be capable of evaluating the performance of a MapReduce pipeline executed on large data processing clusters. A number of Resulting toolchain will be compared and tested against other available MapReduce simulators to reveal any possible advantages and disadvantages for the system. Finally, a number of popular MapReduce algorithms will be used to compare the overall system's accuracy and real execution time on a real cluster. 
+    It is hoped that the end result of this study will be a complete MapReduce
+    simulation framework, that will be capable of evaluating the performance of
+    a MapReduce applicaiton executed on large data processing clusters. The
+    resulting toolchain will be compared and tested against other available
+    MapReduce simulators to reveal any possible advantages and disadvantages of
+    a proposed system. Finally, a number of popular MapReduce applications will
+    be used to compare the overall system's accuracy and real execution time on
+    a real cluster. 
 
+    \section{Conclusion}
+
+    
     \printbibliography
+
+    \vspace{10 mm}
+
+    \begin{flushright}
+        Word count: 
+    \end{flushright}
 
 \end{document}
 
