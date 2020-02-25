@@ -23,7 +23,9 @@
 {\begin{olddefi}\normalfont} {\end{olddefi}}
 
 
-\begin{document} \title{DRAFT: Simulating execution of MapReduce applications}
+\begin{document} 
+    
+    \title{DRAFT: Simulating execution of MapReduce applications}
 
     \author{ 
         \IEEEauthorblockN{Nikita Orlov} 
@@ -37,9 +39,17 @@
     \maketitle
 
     \begin{abstract} 
-    A new method of MapReduce simulation is proposed combining
-    event-discrete simulatros and analytical models, that are built on the fly
-    from data, gathered with a help of performance benchmarks.
+
+    MapReduce is an essential framework for data analysis and data processing.
+    Many businesses and individuals use MapReduce to process server logs,
+    build new data from an existing dataset. Therefore having an instrument
+    to accurately predict MapReduce job execution time on a given set of
+    servers is essential to building cost-efficient and powerful clusters.
+    In this paper, we propose an improved method for modelling MapReduce
+    job execution time based on the testing user-provided job description
+    and input data sample. 
+
+
     \end{abstract}
 
     \begin{IEEEkeywords} 
@@ -65,7 +75,7 @@
     CouchDB \cite{apache_couchdb}, that can execute MapReduce tasks over stored
     data.
 
-    Since Google released the paper \cite{google_mapreduce} on MapReduce, a
+    Since MapReduce framework was proposed, a
     considerable amount of research was put on developing systems that store,
     process, and transform a significant amount of data. Today, big companies
     are producing hundreds of terabytes of data on a daily basis. With the help
@@ -146,14 +156,15 @@
     the supplied MapReduce job and pass them to predefined model that estimates
     execution time. MRSim uses this technique while modelling mapper and
     reducer job, relying on user-provided constants output sizes and execution
-    cost. YARNSim uses a predefined model for the map and reduce stages,
+    cost. YARNSim, a simulator for Apache Yarn \cite{apache_yarn} sheduler and
+    MapReduce executor, uses a predefined model for the map and reduce stages,
     providing a configurable parameter for corresponding input sizes. SLS
-    \cite{sls} is an Apahce YARN\cite{apache_yarn} scheduler simulator capable
-    of experimenting with various scheduling Another way to differentiate is to
-    consider a system design and simulation scope: Mumak and SLS\cite{sls} are
-    scheduler simulators, mainly used to study different scheduling algorithms,
-    and MRperf, MRSG and MRsim are task execution engine simulators, providing
-    a tool for studying different cluster architectures.
+    \cite{sls} is an Apahce YARN scheduler simulator capable of experimenting
+    with various scheduling Another way to differentiate is to consider a
+    system design and simulation scope: Mumak and SLS\cite{sls} are scheduler
+    simulators, mainly used to study different scheduling algorithms, and
+    MRperf, MRSG and MRsim are task execution engine simulators, providing a
+    tool for studying different cluster architectures.
 
 
     \section{Methods} 
@@ -213,6 +224,15 @@
     coefficients. Then a model with the best $R^2$ metrics on validation data
     is chosen. This model is then treated as a complexity function.
 
+    Mapper and Reducer input and output data distribution is captured and used
+    in simulation for more accurate prediction of input and output data size:
+    instead of assuming that input and output size is equal, we increase
+    accuracy of filesystem write, network write, network read, spill and
+    combine stages of MapReduce job execution that took place in between map
+    task is finished and reduce task is started. None of the existing
+    frameworks pays attention to this aspect of MapReduce job execution,
+    resulting in possible accuracy loss. 
+
     Then the analytical model is used in simulation agents of
     SimGrid\cite{simgrid} framework to tell precisely the amount of operations
     needed to be performed, and the amount of data is produced.
@@ -236,13 +256,22 @@
 
     \section{Conclusion}
 
+    It is difficult to overestimate the importance of MapReduce job execution
+    simulator.  Having such a tool leads to convenience in new scheduling
+    algorithms research. It also provides an opportunity to build more power
+    and cost-efficient MapReduce clusters. The proposed method of simulation
+    could potentially open new opportunities in MapReduce simulation, since the
+    most crucial stage of job execution, mapper and reducer, is modelled
+    precisely. 
+
+
     
     \printbibliography
 
     \vspace{10 mm}
 
     \begin{flushright}
-        Word count: 
+        Word count: 1729
     \end{flushright}
 
 \end{document}
