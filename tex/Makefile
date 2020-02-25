@@ -12,8 +12,17 @@ proposal:
 	cd ..
 	cp build/proposal.pdf .
 
+.ONESHELL:
 diploma:
-	echo lal
+	mkdir -p build
+	cp -r diploma.tex bibliography.bib header.tex sections build
+	cd build
+	pdflatex -interaction=nonstopmode diploma.tex 1> pdflatex_1.logs
+	bibtex diploma 1> bibtex.logs
+	pdflatex -interaction=nonstopmode diploma.tex 1> pdflatex_2.logs
+	pdflatex -interaction=nonstopmode diploma.tex 1> pdflatex_3.logs
+	cd ..
+	cp build/diploma.pdf .
 
 clear:
 	rm -rf build
