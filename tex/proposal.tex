@@ -56,19 +56,22 @@
     single batch of data. Authors claim that a vast majority of algorithms
     could be written using MapReduce jobs -- a Map step followed by Reduce
     step, possibly a number of these jobs. Many interfaces for MapReduce have
-    been developed over a past decade -- Apache Hadoop \cite{apache_hadoop} (distributed application
-    execution engine and MapReduce engine), Apache Hive \cite{apache_hive} (a SQL-like data
-    manipulation language), Amazon Elastic MapReduce \cite{amazon_emr} (cloud MapReduce solution
-    for on-demand data processing) are popular ones. MapReduce is also used as
-    a programming paradigm on top of other storage solutions, like a NoSQL
-    database Apache CouchDB \cite{apache_couchdb}, that can execute MapReduce tasks over stored data.
+    been developed over a past decade -- Apache Hadoop \cite{apache_hadoop}
+    (distributed application execution engine and MapReduce engine), Apache
+    Hive \cite{apache_hive} (a SQL-like data manipulation language), Amazon
+    Elastic MapReduce \cite{amazon_emr} (cloud MapReduce solution for on-demand
+    data processing) are popular ones. MapReduce is also used as a programming
+    paradigm on top of other storage solutions, like a NoSQL database Apache
+    CouchDB \cite{apache_couchdb}, that can execute MapReduce tasks over stored
+    data.
 
-    Since Google released the paper \cite{google_mapreduce} on MapReduce, a considerable amount of
-    research was put on developing systems that store, process, and transform a
-    significant amount of data. Today, big companies are producing hundreds of
-    terabytes of data on a daily basis. With the help of MapReduce and related
-    work, this data can be processed in a matter of minutes, giving businesses
-    and individuals an opportunity to perform more complex data analysis. 
+    Since Google released the paper \cite{google_mapreduce} on MapReduce, a
+    considerable amount of research was put on developing systems that store,
+    process, and transform a significant amount of data. Today, big companies
+    are producing hundreds of terabytes of data on a daily basis. With the help
+    of MapReduce and related work, this data can be processed in a matter of
+    minutes, giving businesses and individuals an opportunity to perform more
+    complex data analysis. 
 
     Several papers are released on this topic, but they do not provide any
     code, or the code is not updated for a couple of years and is outdated.
@@ -109,50 +112,54 @@
     (mainly by reducing the number of events, as well as the number of
     entities, internal framework processes).
 
-    ROSS \cite{ross} (Rensselaer Optimistic Simulation System) is an example of parallel
-    discrete-event simulator. It is used by CODES \cite{codes}, an I/O and storage emulator,
-    that allows building an accurate model of exascale storage solutions. These
-    frameworks are used in several simulators (i.e., BTeHadoop2 \cite{baseline_model}).
+    ROSS \cite{ross} (Rensselaer Optimistic Simulation System) is an example of
+    parallel discrete-event simulator. It is used by CODES \cite{codes}, an I/O
+    and storage emulator, that allows building an accurate model of exascale
+    storage solutions. These frameworks are used in several simulators (i.e.,
+    BTeHadoop2 \cite{baseline_model}).
 
-    SimGrid \cite{simgrid} is a low-level simulation framework for simulating complex 
-    multi-server environment. It uses its own implementation of a parallel discrete-event simulator as described in book by Fujimoto, Richard \cite{fujimoto_parallel_1990}.
+    SimGrid \cite{simgrid} is a low-level simulation framework for simulating
+    complex multi-server environment. It uses its own implementation of a
+    parallel discrete-event simulator as described in book by Fujimoto, Richard
+    \cite{fujimoto_parallel_1990}.
 
     \textit{Analytical modelling} is a method that uses a set of performance
     equations that can predict execution times for different parts of the
     MapReduce system, including mappers and reducers. In most of the cases,
     these equations are built from user defined constants on predefined
-    equations. Some of the simulators, like BTeHadoop2 \cite{baseline_model}, build these equations
-    based on performance benchmarks of supplied MapReduce job description.
+    equations. Some of the simulators, like BTeHadoop2 \cite{baseline_model},
+    build these equations based on performance benchmarks of supplied MapReduce
+    job description.
 
     Some existing simulators are based on \textit{discrete-event modelling},
-    like Mumak \cite{mumak}, SimMR \cite{simmr}, MRperf \cite{mrperf}, MRSG \site{mrsg}, YarnSim \cite{yarnsim} and MRSim \cite{mrsim}. They all share the same
-    principle: the core of the MapReduce system is simulated, where
+    like Mumak \cite{mumak}, SimMR \cite{simmr}, MRperf \cite{mrperf}, MRSG
+    \site{mrsg}, YarnSim \cite{yarnsim} and MRSim \cite{mrsim}. They all share
+    the same principle: the core of the MapReduce system is simulated, where
     user-supplied mappers and reducers characteristics are taken either from
     execution benchmarks or from the user-provided information. MRPerf assumes
     that every job is a single mapper-reducer pair, and their corresponding
     outputs size and execution time are dependent only on input size and not
     the contents of input data. 
 
-    In contrary, Song et al. \cite{song} proposed a method that is based on \textit{an
-    analytical modelling} technique. They gather some metadata about the
-    supplied MapReduce job and pass them to predefined model that estimates
+    In contrary, Song et al. \cite{song} proposed a method that is based on
+    \textit{an analytical modelling} technique. They gather some metadata about
+    the supplied MapReduce job and pass them to predefined model that estimates
     execution time. MRSim uses this technique while modelling mapper and
     reducer job, relying on user-provided constants output sizes and execution
     cost. YARNSim uses a predefined model for the map and reduce stages,
-    providing a configurable parameter for corresponding input sizes. SLS \cite{sls} 
-    is an Apahce YARN\cite{apache_yarn} scheduler simulator capable of experimenting with various scheduling 
-    algorithms.
-
-    Another way to differentiate is to consider a system design and simulation
-    scope: Mumak and SLS\cite{sls} are scheduler simulators, mainly used to study
-    different scheduling algorithms, and MRperf, MRSG and MRsim are task
-    execution engine simulators, providing a tool for studying different
-    cluster architectures.
+    providing a configurable parameter for corresponding input sizes. SLS
+    \cite{sls} is an Apahce YARN\cite{apache_yarn} scheduler simulator capable
+    of experimenting with various scheduling Another way to differentiate is to
+    consider a system design and simulation scope: Mumak and SLS\cite{sls} are
+    scheduler simulators, mainly used to study different scheduling algorithms,
+    and MRperf, MRSG and MRsim are task execution engine simulators, providing
+    a tool for studying different cluster architectures.
 
 
     \section{Methods} 
 
-    This project uses a mix of two approaches given in Section \ref{literature_review}.
+    This project uses a mix of two approaches given in Section 
+    \ref{literature_review}.
 
     First, the application's mapper and reducer programs are tested to obtain
     performance statistics. The program is run ten times. Each time several
@@ -188,9 +195,9 @@
     mappers with external dictionary lookups and other similar tasks, that are
     not dependent on mapper's input data size. Reducer reads mapper's output
     grouped by key and outputs final value for any given key.  It also can
-    perform similar operations with constant, logarithmic, linear and $n^k
-    \cdot \log n$ time-space complexity (i.e. input data or external dictionary
-    lookups, sorting, multiplying output rows).
+    perform similar operations with constant, logarithmic, linear and $O(n^k
+    \cdot \log n)$ time-space complexity (i.e. input data or external 
+    dictionary lookups, sorting, multiplying output rows).
 
     Other methods could be investigated for building an analytical model from
     gathered data, for example, Lagrange polynomial, but this is not a suitable
@@ -206,9 +213,9 @@
     coefficients. Then a model with the best $R^2$ metrics on validation data
     is chosen. This model is then treated as a complexity function.
 
-    Then the analytical model is used in simulation agents of SimGrid\cite{simgrid} framework
-    to tell precisely the amount of operations needed to be performed, and the
-    amount of data is produced.
+    Then the analytical model is used in simulation agents of
+    SimGrid\cite{simgrid} framework to tell precisely the amount of operations
+    needed to be performed, and the amount of data is produced.
 
     Simulation agents used in SimGrid are programmed to perform all execution
     steps for a given MapReduce job. Apache Hadoop framework is chosen as an
