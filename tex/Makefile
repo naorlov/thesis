@@ -1,4 +1,4 @@
-all: proposal diploma 
+all: presentation
 
 .ONESHELL:
 proposal:
@@ -12,7 +12,7 @@ proposal:
 	cd ..
 	cp build/proposal.pdf .
 
-.ONESHELL:
+ONESHELL:
 diploma:
 	mkdir -p build
 	cp -r diploma.tex bibliography.bib header.tex sections build
@@ -23,6 +23,22 @@ diploma:
 	pdflatex -interaction=nonstopmode diploma.tex 1> pdflatex_3.logs
 	cd ..
 	cp build/diploma.pdf .
+
+
+.ONESHELL:
+presentation:
+	mkdir -p build 
+	cp proposal_presentation.tex build
+	cd build
+	pdflatex -interaction=nonstopmode proposal_presentation.tex 1> pdflatex_1.logs
+	bibtex proposal 1> bibtex.logs
+	pdflatex -interaction=nonstopmode proposal_presentation.tex 1> pdflatex_2.logs
+	pdflatex -interaction=nonstopmode proposal_presentation.tex 1> pdflatex_3.logs
+	cd ..
+	cp build/proposal_presentation.pdf .
+
+
+
 
 clear:
 	rm -rf build

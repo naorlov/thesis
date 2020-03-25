@@ -1,0 +1,98 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+
+
+\title{Simulating execution of MapReduce applications}
+\author{Nikita Orlov\\ Oleg Sukhoroslov}
+\institute{HSE University}
+\date{\today}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    \section{Introduction}
+    
+    \begin{frame}
+        \frametitle{What is MapReduce?}
+        \begin{itemize}
+            \item<1-> MapReduce -- presented in 2004 by Google
+            \item<2-> Framework for highly parallelized data processing
+            \item<3-> Simple yet powerful abstraction
+            \item<4-> Used by a big number of companies and institutions 
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Cluster simulation}
+        \begin{itemize}
+            \item<1-> Reducing costs for businesses
+            \item<2-> Ability to plan cluster ahead of time 
+            \item<3-> Useful for scheduler development
+        \end{itemize}
+    \end{frame}
+    
+    \section{Main goal}
+
+    \begin{frame}
+        \frametitle{Main goal}
+        \begin{center}
+            Simulation and prediction of execution times for MapReduce
+            application on cluster
+        \end{center}
+    \end{frame}
+
+    \section{Methods}
+
+    \begin{frame}
+        \frametitle{Methods}
+        \begin{itemize}
+            \item<+-> \textit{Discrete-event simulation}
+            \begin{itemize}
+                \item<+-> SimGrid
+                \item<+-> Execution runtime
+                \item<+-> I/O operations (network, storage)
+                \item<+-> Node resource utilization
+            \end{itemize}
+            \item<+-> \textit{Analytical model}
+            \begin{itemize}
+                \item<+-> User-supplied binary testing
+                \item<+-> Calculating input/\textit{output} data distribution
+                \item<+-> Using it in execution runtime
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \section{Anticipated results}
+    
+    \begin{frame}
+        \frametitle{Anticipated reuslts}
+        \begin{itemize}
+            \item<+-> \textit{Morpheus} --  data and binary analyzer
+            \item<+-> \textit{Aphrodite} -- simulation model runtime
+            \item<+-> Accurate predictions compared against other simulators 
+                and real cluster
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \begin{center}
+            Nikita Orlov
+            \
+            Oleg Sukhoroslov
+        \end{center}
+    \end{frame}
+
+\end{document}
+
