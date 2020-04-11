@@ -14,7 +14,7 @@ setup(
     license="MIT",
     author="Nikita Orlov",
     author_email="eaglebar@yandex.ru",
-    packages=["src"],
+    packages=["src", "proto"],
     install_requirements=install_requirements,
     entry_points={
         "console_scripts": [

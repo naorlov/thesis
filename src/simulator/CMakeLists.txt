@@ -7,6 +7,7 @@ include_directories(${SimGrid_INCLUDE_DIR})
 add_executable(
         simulator
         main.cpp
+        ${PROTO_CPP_SOURCE}
 )
 
 target_link_libraries(

@@ -2,7 +2,7 @@ from marshmallow import Schema
 from marshmallow import fields
 
 from .analytics import TestResult
-
+from proto import Data_pb2
 
 class StatsSchema(Schema):
     mean = fields.Float()

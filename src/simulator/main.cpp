@@ -45,9 +45,9 @@ int simple(int argc, char ** argv)
     po::store(po::parse_command_line(argc, argv, description), vm);
     po::notify(vm);
 
-    e.load_platform(vm["platform"].as<std::string>().c_str());
+    e.load_platform(vm["platform"].as<std::string>());
     simgrid::s4u::Actor::create(
-        "mapper", simgrid::s4u::Host::by_name(vm["host"].as<std::string>().c_str()), &mapper);
+        "mapper", simgrid::s4u::Host::by_name(vm["host"].as<std::string>()), &mapper);
 
     e.run();
     std::cout << e.get_clock() << std::endl;
