@@ -38,6 +38,16 @@ version
 
 docker
 
+# Build-related stuff
+
+compile_commands.json
+core
+pb
+serialized_function      
+src/protobufs/cpp/
+src/protobufs/python/
+test.py
+test/
 # Prerequisites
 *.d
 

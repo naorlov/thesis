@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package aphrodite.protobufs;
+
+message function {
+    string description = 1;
+    repeated double linear_part = 2;
+    repeated double log_part = 3;
+
+}

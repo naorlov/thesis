@@ -7,14 +7,8 @@
 
 #include <iostream>
 
-aphrodite::Simulator::Simulator()
-{
-    this->pipeline = aphrodite::SimulatorPipeline();
-
-    std::cout << "Simulator build();" << std::endl;
-}
-
 aphrodite::SimulationResult aphrodite::Simulator::run()
 {
+    
     return this->pipeline.run();
 }

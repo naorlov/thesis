@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package TestResult;
+
+message Times {
+    repeated double times = 1;
+
+    message Stats {
+        required double p100 = 1; // stats, calculated over whole data
+        required double p99 = 2; // stats over 99% percentile data
+        required double p95 = 3;
+    }
+
+    optional Stats mean = 2;
+    optional Stats average = 3;
+}
+
+message FunctionDescription {
+    required int64 degree = 1;
+    repeated double linear_coefs = 2;
+    repeated double log_coefs = 3;
+}

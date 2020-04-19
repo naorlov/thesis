@@ -16,7 +16,7 @@ namespace aphrodite
 class SimulatorPipeline
 {
 private:
-    std::vector<std::shared_ptr<PipelineStep>> steps;
+    std::vector<PipelineStepPtr> steps;
 
 public:
     explicit SimulatorPipeline() = default;
@@ -29,15 +29,13 @@ public:
         }
     };
 
-    SimulatorPipeline(std::initializer_list<std::shared_ptr<PipelineStep>> steps_)
-        : steps(steps_)
+    SimulatorPipeline(std::initializer_list<std::shared_ptr<PipelineStep>> steps_) : steps(steps_)
     {
     }
 
-    //    explicit SimulatorPipeline(const std::vector<aphrodite::PipelineStep *>
-    //    & steps);
+    SimulatorPipeline(const std::vector<PipelineStepPtr> & steps_) : steps(steps_) {}
 
-    // Copy-assignment
+
     SimulatorPipeline & operator=(const SimulatorPipeline & other) = default;
 
     aphrodite::SimulationResult run();

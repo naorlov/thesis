@@ -1,15 +1,15 @@
-//
-// Created by n.orlov on 02/01/2020.
-//
-
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
 #include <exception>
 #include <iostream>
+#include <memory>
 
 namespace aphrodite
 {
+class PipelineStep;
+using PipelineStepPtr = std::shared_ptr<PipelineStep>;
+
 class PipelineStep
 {
 public:
@@ -18,6 +18,7 @@ public:
     virtual void run() = 0;
     virtual ~PipelineStep() = default;
 };
+
 
 namespace mapper
 {
