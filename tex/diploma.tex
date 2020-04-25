@@ -1,24 +1,104 @@
-\documentclass[a4paper,14pt]{article}
+\documentclass[a4paper,12pt]{article}
+\usepackage{header}
+\usepackage{hyperref}
 
-\input{header}
+ % Цвета для гиперссылок
+\usepackage{xcolor}
+\usepackage{floatflt}
+\usepackage{ulem}
 
-\usepackage{biblatex}
-%\bibliographystyle{gost2008}
-\addbibresource{./bibliography.bib}
+% hack for indentation
+\usepackage{indentfirst}
+\usepackage{longtable}
+\usepackage{graphicx}
+
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+\usepackage{caption}
+\captionsetup[table]{position=t,justification=raggedleft,slc=off}
+
+% hack for список литературы
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*}{\section}{}{}
+\fancyhf{}
+\fancyhead[R]{\head}
+\fancyhead[L]{\thepage}
+
+\def\baselinestretch{1}
+
+\makeatletter
+\let\newtitle\@title
+\let\newdate\@date
+\makeatother
+
+\linespread{1.3}
 
 \begin{document}
-    \author{Орлов Никита}
-    \title{Имитационное моделирование распределенных систем}
-    \maketitle
+    \input{sections/titlepage.tex}
+    
+    \pagestyle{plain}
+    \tableofcontents
+    
+    \newpage
 
-    \subfile{sections/litretature_review.tex}
+    \section{Введение}\label{sec:introduction}
+
+    \subsection{Актуальность}\label{sec:relevance}
+
+    \subsection{Цели и задачи}\label{sec:goals}
+
+    \newpage
+
+    \section{О MapReduce}\label{sec:whatismapred}
+
+    \newpage
+    
+    \section{Технологии симуляции}
+
+    \subsection{ROSS}
+
+    \subsection{CODES}
+
+    \subsection{SimGrid}
+
+    \newpage
+
+    \section{Обзор существующих решений}
+    
+    \subsection{MRSim}
+
+    \subsection{MRperf}
+
+    \subsection{MRSG}
+
+    \subsection{YarnSim}
+
+    \subsection{Mumak}
+
+    \subsection{BTeHadoop2}
+
+    \newpage
+
+    \section{Мой вклад}
+
+    \subsection{Архитектура}
+
+    \subsection{Особенности}
+
+    \subsection{Работа с симулятором}
+
+    \newpage
+
+    \section{Тестирование}
+
+    \newpage
+
+    \section{Заключение}
+
+    \newpage
 
     \printbibliography
+
 \end{document}
-
-
-
-
-
-
-
