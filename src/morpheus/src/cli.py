@@ -8,6 +8,7 @@ from src.data_analyzer import DataAnalyzer
 from src.models import TestResultSchema
 from src.logger import logger
 
+
 class CLI:
     def __init__(
         self,
@@ -39,7 +40,7 @@ class CLI:
     def benchmark_over(self, test_files) -> List[TestResult]:
         results: List[TestResult] = list()
         for test_file in test_files:
-            logger.debug(f'testing on {test_file}')
+            logger.debug(f"testing on {test_file}")
             results.append(
                 test_program(self.executable_path, self.type, test_file, self.count)
             )

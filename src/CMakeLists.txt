@@ -1,2 +1,3 @@
 add_subdirectory(simulator)
 add_subdirectory(protobufs)
+add_subdirectory(morpheus)

@@ -1,0 +1,14 @@
+stages:
+  mapper_1:
+    type: mapper
+    executable: ~/path/to/mapper/binary
+    input: ~/path/to/input/data
+  mapper_2:
+    type: mapper
+    executable: ~/path/to/mapper_2/binary
+    input: mapper_1:output
+  reducer_1:
+    type: reducer
+    executable: ~/path/to/reducer/binary
+    input: mapper_2:output
+  

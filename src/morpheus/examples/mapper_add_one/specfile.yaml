@@ -1,0 +1,8 @@
+version: 1
+
+stages:
+  mapper:
+    type: mapper
+    executable: ./mapper_add_one
+    input: ./inputs
+

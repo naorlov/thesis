@@ -21,6 +21,11 @@ class TestResult:
         self._executable = executable_path.resolve()
         self._test_file_path = test_file_path.resolve()
 
+    def __str__(self):
+        return f"TestResult[length={self.data_length} mean={self.stats_99.mean=:.06f}]"
+
+    __repr__ = __str__
+
 
 class Stats:
     def __init__(

@@ -26,3 +26,11 @@ message(${Protobuf_LIBRARIES})
 target_link_libraries(
         simulator boost_program_options ${SimGrid_LIBRARY} ${Protobuf_LIBRARIES}
 )
+
+add_executable(
+        simple_simulator
+        ${CMAKE_CURRENT_SOURCE_DIR}/simple.cpp
+)
+target_link_libraries(
+        simple_simulator ${SimGrid_LIBRARY} boost_program_options
+)

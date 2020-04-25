@@ -6,7 +6,7 @@ def read_file(filepath):
         return file.read().split("\n")
 
 
-install_requirements = read_file("requirements.txt")
+# install_requirements = read_file("requirements.txt")
 
 setup(
     name="morpheus",
@@ -14,12 +14,12 @@ setup(
     license="MIT",
     author="Nikita Orlov",
     author_email="eaglebar@yandex.ru",
-    packages=["src", "proto"],
-    install_requirements=install_requirements,
+    packages=["src", "proto", "morpheus"],
+    # install_requirements=install_requirements,
     entry_points={
         "console_scripts": [
-            "morpheus = src.__main__:main",
-            "datagen = src.string_generator:main",
+            "mrss-datagen = src.string_generator:main",
+            "mrss-analyzer = morpheus.main:main",
         ]
     },
 )

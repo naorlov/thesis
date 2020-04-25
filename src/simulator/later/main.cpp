@@ -4,13 +4,13 @@
 #include <fstream>
 #include <vector>
 #include <fcntl.h>
-#include <function.h>
 #include <pipeline.h>
 #include <simulator.h>
 #include <simulator_pipeline.h>
 #include <boost/program_options.hpp>
 #include <simgrid/s4u.hpp>
 #include "function.pb.h"
+#include "simgrid/s4u/Engine.hpp"
 
 
 namespace po = boost::program_options;
@@ -34,6 +34,8 @@ static void mapper()
     XBT_INFO("Task done");
 }
 
+namespace po = boost::program_options;
+
 po::variables_map parse_args(int argc, char ** argv)
 {
     try
@@ -44,7 +46,7 @@ po::variables_map parse_args(int argc, char ** argv)
         description.add_options()
             ("help",     ("Produce help message"))
             ("platform", po::value<std::string>()->required(), ("Platform file"))
-            ("host", po::value<std::string>(), ("Hostname in config file"));
+            ("host",     po::value<std::string>(), ("Hostname in config file"));
         // clang-format on
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, description), vm);
@@ -65,26 +67,6 @@ po::variables_map parse_args(int argc, char ** argv)
     }
 }
 
-int simple(int argc, char ** argv)
-{
-    simgrid::s4u::Engine e(&argc, argv);
-
-    auto vm = parse_args(argc, argv);
-    if (!vm.count("host"))
-    {
-        std::cerr << "No --host found, required for simple simulation" << std::endl;
-        exit(1);
-    }
-
-    e.load_platform(vm["platform"].as<std::string>().c_str());
-    simgrid::s4u::Actor::create(
-        "mapper", simgrid::s4u::Host::by_name(vm["host"].as<std::string>().c_str()), &mapper);
-
-    e.run();
-    std::cout << e.get_clock() << std::endl;
-    return 0;
-}
-
 void setup_libraries()
 {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -93,8 +75,8 @@ void setup_libraries()
 int main(int argc, char ** argv)
 {
     setup_libraries();
-
     s4u::Engine engine(&argc, argv);
     aphrodite::Simulator simulator();
     
+    auto result = simulator.run(engine);
 }
