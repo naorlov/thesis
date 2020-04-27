@@ -9,20 +9,25 @@ class TestResult:
         self,
         data_length: int = None,
         times: List[float] = None,
+        size: int = None,
+        avg_freq: int = None,
         executable_path: Path = None,
         test_file_path: Path = None,
     ):
         self.data_length = data_length
         self.times = np.array(times)
+        self.size = size
         self._analyzer = TimesAnalyzer(self.times)
         self.stats = self._analyzer.stats
         self.stats_95 = self._analyzer.stats_95
         self.stats_99 = self._analyzer.stats_99
         self._executable = executable_path.resolve()
         self._test_file_path = test_file_path.resolve()
+        self.avg_freq = avg_freq
+        self.flop = self.stats_95.mean * avg_freq
 
     def __str__(self):
-        return f"TestResult[length={self.data_length} mean={self.stats_99.mean=:.06f}]"
+        return f"TestResult[length={self.data_length} mean={self.stats_99.mean=:.06f} size={self.size}]"
 
     __repr__ = __str__
 

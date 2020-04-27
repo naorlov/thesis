@@ -1,0 +1,17 @@
+mapper:
+  space:
+    degree: 2
+    logarithmic_part:
+    - 3.0493481351429237e-11
+    - 2.220446049250313e-16
+    polynomial_part:
+    - 0.0
+    - 0.9999999999999969
+  time:
+    degree: 2
+    logarithmic_part:
+    - 1874361.1887992749
+    - -29.421852078457732
+    polynomial_part:
+    - 6080500.69292194
+    - 681.9698614341447

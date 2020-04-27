@@ -9,6 +9,7 @@ from .analytics import TestResult
 from .data_analyzer import DataAnalyzer
 from .logger import logger
 import math
+from pprint import pprint
 
 
 @click.group()
@@ -78,10 +79,12 @@ def test_stage(
     type=pathlib.Path,
     required=True,
 )
-def full(specfile):
+def full(specfile: pathlib.Path):
     document = yaml.load(specfile.read_text(), Loader=yaml.FullLoader)
     validate_specfile(document)
     stages: t.Dict[str, t.Dict[str, str]] = document["stages"]
+
+    global_result = {}
 
     for name, descriprion in stages.items():
         program_path = (
@@ -100,6 +103,12 @@ def full(specfile):
             input_path=input_path,
         )
         analyzer = DataAnalyzer(result)
-        reuslt = analyzer.find_model()
-        
-        
+        time_model = analyzer.find_time_model()
+        space_model = analyzer.find_space_model()
+
+        global_result[name] = {
+            "time": time_model.to_json(),
+            "space": space_model.to_json(),
+        }
+
+    (specfile.parent / "result.yaml").write_text(yaml.dump(global_result))

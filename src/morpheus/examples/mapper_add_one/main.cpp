@@ -16,8 +16,10 @@ int main()
         }
         catch (std::invalid_argument & argument)
         {
+            std::cerr << "fuck on line: " << line << '\n';
             continue;
         }
     }
+    std::cout << std::endl;
     return 0;
 }
