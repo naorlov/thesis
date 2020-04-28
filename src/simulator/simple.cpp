@@ -2,14 +2,12 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
-#include <boost/program_options.hpp>
-#include <simgrid/s4u.hpp>
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
-#include "function.pb.h"
-#include "simgrid/forward.h"
+#include "simgrid/s4u.hpp"
 #include "simgrid/s4u/Actor.hpp"
 #include "simgrid/s4u/Comm.hpp"
 #include "simgrid/s4u/Host.hpp"
@@ -62,58 +60,20 @@ public:
 }
 
 namespace s4u = simgrid::s4u;
-namespace po = boost::program_options;
 
-po::variables_map parse_args(int argc, char ** argv)
+std::map<std::string, std::string> parse_args(int argc, char ** argv)
 {
-    try
+    std::map<std::string, std::string> options;
+
+    if (argc < 2)
     {
-        po::options_description description("Simple options");
-
-        // clang-format off
-        description.add_options()
-            ("help",                                                        ("Produce help message"))
-            ("platform",        po::value<std::string>()->required(),       ("Platform file"))
-            ("specfile",        po::value<std::string>()->required(),       ("Spec file path"))
-            ("host",            po::value<std::string>(),                   ("Hostname in config file"));
-        // clang-format on
-        po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, description), vm);
-
-        if (vm.count("help"))
-        {
-            std::cout << description << std::endl;
-            exit(0);
-        }
-
-        po::notify(vm);
-        return vm;
-    }
-    catch (po::required_option & exception)
-    {
-        std::cerr << exception.what() << std::endl;
+        std::cerr << "Not enough arguments" << std::endl;
         exit(1);
     }
+    options["specfile"] = argv[1];
+    options["platform"] = argv[2];
+    return options;
 }
-// static void mapper(ConstMapperContextPtr mapper_context)
-// {
-//     auto time_complexity_function = mapper_context->time_function();
-//     auto space_complexity_function = mapper_context->space_function();
-//     auto input_size = mapper_context->input_size();
-
-//     auto work_size = time_complexity_function(input_size);
-//     auto output_data_size = space_complexity_function(input_size);
-
-//     simgrid::s4u::Disk * disk = s4u::Host::current()->get_disks().front();
-
-//     disk->read(input_size);
-//     s4u::this_actor::execute(work_size);
-//     disk->write(output_data_size);
-
-//     std::string msg = s4u::this_actor::get_name();
-//     std::string * msgptr = new std::string(msg);
-//     mapper_context->coordinator_mailbox->put_async(msgptr, 16)->wait();
-// }
 
 class StepContext
 {
@@ -146,15 +106,15 @@ static void executor(const std::vector<StepContext> & steps)
 
         //TODO : more smart disk selection
         auto current_host = s4u::Host::current();
-        auto disks = current_host->get_disks();
-        auto disk = disks.front();
-        std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
-                  << " starting read of " << input_size << " lines with disk speed "
-                  << disk->get_read_bandwidth() << "." << std::endl;
+        // auto disks = current_host->get_disks();
+        // auto disk = disks.front();
+        // std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
+        //           << " starting read of " << input_size << " lines with disk speed "
+        //           << disk->get_read_bandwidth() << "." << std::endl;
 
-        disk->read(input_size);
-        std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
-                  << " read done." << std::endl;
+        // disk->read(input_size);
+        // std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
+        //           << " read done." << std::endl;
 
         std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
                   << " starting execution of " << flopcount << " operations with speed "
@@ -162,24 +122,25 @@ static void executor(const std::vector<StepContext> & steps)
 
         s4u::this_actor::execute(flopcount);
 
-        std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
-                  << " execution done." << std::endl;
+        // std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
+        //           << " execution done." << std::endl;
 
-        std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
-                  << " starting write of " << output_size << " lines with disk speed "
-                  << disk->get_write_bandwidth() << "." << std::endl;
-        disk->write(output_size);
-        std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname() << "done."
-                  << std::endl;
+        // std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname()
+        //           << " starting write of " << output_size << " lines with disk speed "
+        //           << disk->get_write_bandwidth() << "." << std::endl;
+        // disk->write(output_size);
+        // std::cout << s4u::Engine::get_clock() << " " << s4u::this_actor::get_cname() << "done."
+        //           << std::endl;
     }
 }
 
 int simple(int argc, char ** argv)
 {
     auto varmap = parse_args(argc, argv);
-    simgrid::s4u::Engine e(&argc, argv);
 
-    fs::path specfile(varmap["specfile"].as<std::string>());
+    s4u::Engine e(&argc, argv);
+
+    fs::path specfile(varmap["specfile"]);
     if (!fs::exists(specfile))
     {
         std::cerr << "Specfile is not found!" << std::endl;
@@ -196,7 +157,7 @@ int simple(int argc, char ** argv)
     auto spec = YAML::LoadFile(specfile);
     auto result = YAML::LoadFile(resultfile);
 
-    e.load_platform(varmap["platform"].as<std::string>());
+    e.load_platform(varmap["platform"]);
     auto hosts = e.get_all_hosts();
 
     std::vector<StepContext> pipeline;
@@ -207,8 +168,22 @@ int simple(int argc, char ** argv)
         auto type = spec["stages"][stage]["type"].as<std::string>();
         auto functions = node.second;
 
-        StepContext current_step(
-            type, spec["simulation"][stage]["input_size"].as<double>() / hosts.size(), functions);
+        double step_input_size = 0;
+        if (type == "mapper")
+        {
+            step_input_size = spec["simulation"][stage]["input_size"].as<double>() / hosts.size();
+        }
+        else if (type == "reducer")
+        {
+            std::string dependency_name = spec["stages"][stage]["after"].as<std::string>();
+            auto prev_step_size_function = aphrodite::Function(result[dependency_name]["space"]);
+
+            auto simulation_size = spec["simulation"][dependency_name]["input_size"].as<double>();
+            step_input_size = spec["simulation"][stage]["input_size"].as<double>();
+            std::cout << step_input_size << '\n';
+        }
+
+        StepContext current_step(type, step_input_size, functions);
 
         pipeline.push_back(current_step);
     }

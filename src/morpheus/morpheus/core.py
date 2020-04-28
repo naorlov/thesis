@@ -82,15 +82,11 @@ def test_mapper(program_path: Path, input_path: Path, iterations=10) -> TestResu
     return result_data
 
 
-def test_reducer(program_path):
-    pass
-
-
 def test_program(program_path, type, input_path, count=10):
     if type == "mapper":
         return test_mapper(Path(program_path), Path(input_path), count)
     elif type == "reducer":
-        return test_reducer(program_path)
+        return test_mapper(Path(program_path), Path(input_path), count)
     else:
         raise ValueError("Illegal type")
 
