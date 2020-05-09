@@ -2,7 +2,7 @@
 <!DOCTYPE platform SYSTEM "https://simgrid.org/simgrid.dtd">
 <platform version="4.1">
   <zone id="AS0" routing="Full">
-    <host id="bob" speed="2Gf">
+    <host id="bob" speed="2199999999">
       <prop id="ram" value="100B" />
       <disk id="Disk1" read_bw="100MBps" write_bw="40MBps">
         <prop id="size" value="500GiB"/>

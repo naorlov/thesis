@@ -13,7 +13,8 @@ src/morpheus/build
 src/morpheus/dist
 src/morpheus/logs
 src/morpheus/morpheus.egg-info
-
+src/morpheus/examples/**/*input*
+bazel*
 simgrid
 
 # Binaries

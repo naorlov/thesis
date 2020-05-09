@@ -7,95 +7,19 @@
 #include <vector>
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
+#include "function.h"
 #include "simgrid/s4u.hpp"
 #include "simgrid/s4u/Actor.hpp"
 #include "simgrid/s4u/Comm.hpp"
 #include "simgrid/s4u/Host.hpp"
 #include "simgrid/s4u/Mailbox.hpp"
+#include "step_context.h"
+#include "utils.h"
 
 namespace fs = std::filesystem;
-
-namespace aphrodite
-{
-class Function
-{
-private:
-    uint64_t degree;
-    std::vector<double> polynomial_part;
-    std::vector<double> logarithmic_part;
-
-public:
-    Function() = default;
-    Function(YAML::Node function)
-    {
-        degree = function["degree"].as<uint64_t>();
-
-        for (auto coef : function["logarithmic_part"])
-        {
-            logarithmic_part.push_back(coef.as<double>());
-        }
-        for (auto coef : function["polynomial_part"])
-        {
-            polynomial_part.push_back(coef.as<double>());
-        }
-    }
-    double operator()(double & x) const
-    {
-        double result = 0;
-
-        for (size_t power = 0; power < polynomial_part.size(); ++power)
-        {
-            result += polynomial_part[power] * std::pow(x, power);
-        }
-
-        for (size_t power = 0; power < logarithmic_part.size(); ++power)
-        {
-            result += logarithmic_part[power] * std::log(x) * std::pow(x, power);
-        }
-
-        return result;
-    }
-};
-
-}
-
 namespace s4u = simgrid::s4u;
 
-std::map<std::string, std::string> parse_args(int argc, char ** argv)
-{
-    std::map<std::string, std::string> options;
-
-    if (argc < 2)
-    {
-        std::cerr << "Not enough arguments" << std::endl;
-        exit(1);
-    }
-    options["specfile"] = argv[1];
-    options["platform"] = argv[2];
-    return options;
-}
-
-class StepContext
-{
-public:
-    std::string type;
-    double input_size;
-    aphrodite::Function flop_function;
-    aphrodite::Function output_size_function;
-
-public:
-    StepContext() = default;
-
-    StepContext(std::string & type_, double input_size_, YAML::Node functions)
-    {
-        type = type_;
-        input_size = input_size_;
-        output_size_function = aphrodite::Function(functions["space"]);
-        flop_function = aphrodite::Function(functions["time"]);
-    }
-};
-
-static void executor(const std::vector<StepContext> & steps)
+static void executor(const std::vector<aphrodite::StepContext> & steps)
 {
     std::cout << "Running executor " << s4u::this_actor::get_cname() << std::endl;
     for (auto step : steps)
@@ -134,6 +58,36 @@ static void executor(const std::vector<StepContext> & steps)
     }
 }
 
+std::vector<aphrodite::StepContext>
+build_pipeline(const YAML::Node & result, const YAML::Node & spec, const )
+{
+    for (auto node : result)
+    {
+        auto stage = node.first.as<std::string>();
+        auto type = spec["stages"][stage]["type"].as<std::string>();
+        auto functions = node.second;
+
+        double step_input_size = 0;
+        if (type == "mapper")
+        {
+            step_input_size = spec["simulation"][stage]["input_size"].as<double>() / hosts.size();
+        }
+        else if (type == "reducer")
+        {
+            auto dependency_name = spec["stages"][stage]["after"].as<std::string>();
+            auto prev_step_size_function = aphrodite::Function(result[dependency_name]["space"]);
+
+            auto simulation_size = spec["simulation"][dependency_name]["input_size"].as<double>();
+            step_input_size = prev_step_size_function(simulation_size);
+            std::cout << simulation_size << " " << step_input_size << '\n';
+        }
+
+        aphrodite::StepContext current_step(type, step_input_size, functions);
+
+        pipeline.push_back(current_step);
+    }
+}
+
 int simple(int argc, char ** argv)
 {
     auto varmap = parse_args(argc, argv);
@@ -160,33 +114,7 @@ int simple(int argc, char ** argv)
     e.load_platform(varmap["platform"]);
     auto hosts = e.get_all_hosts();
 
-    std::vector<StepContext> pipeline;
-
-    for (auto node : result)
-    {
-        auto stage = node.first.as<std::string>();
-        auto type = spec["stages"][stage]["type"].as<std::string>();
-        auto functions = node.second;
-
-        double step_input_size = 0;
-        if (type == "mapper")
-        {
-            step_input_size = spec["simulation"][stage]["input_size"].as<double>() / hosts.size();
-        }
-        else if (type == "reducer")
-        {
-            std::string dependency_name = spec["stages"][stage]["after"].as<std::string>();
-            auto prev_step_size_function = aphrodite::Function(result[dependency_name]["space"]);
-
-            auto simulation_size = spec["simulation"][dependency_name]["input_size"].as<double>();
-            step_input_size = spec["simulation"][stage]["input_size"].as<double>();
-            std::cout << step_input_size << '\n';
-        }
-
-        StepContext current_step(type, step_input_size, functions);
-
-        pipeline.push_back(current_step);
-    }
+    std::vector<aphrodite::StepContext> pipeline;
 
 
     for (auto host : hosts)

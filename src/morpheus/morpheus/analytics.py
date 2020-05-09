@@ -16,7 +16,7 @@ class TestResult:
     ):
         self.data_length = data_length
         self.times = np.array(times)
-        self.size = size
+        self.size = sizedd
         self._analyzer = TimesAnalyzer(self.times)
         self.stats = self._analyzer.stats
         self.stats_95 = self._analyzer.stats_95

@@ -10,6 +10,7 @@ cc_library(
 )
 """
 )
+
 new_local_repository(
     name = "simgrid_headers",
     path = "/opt/simgrid/include",

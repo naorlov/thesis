@@ -71,6 +71,20 @@ def test_stage(
     return results
 
 
+class TestingPipeline:
+    def __init__(
+        self, program_path: pathlib.Path, program_type: str, input_path: pathlib.Path,
+    ):
+        self.program_path = program_path
+        self.program_type = program_type
+        self.input_path = input_path
+        self.pipeline = list()
+        self._build_pipeline()
+
+    def _build_pipeline(self,):
+        pass
+
+
 @main.command()
 @click.option(
     "-sf",
@@ -97,6 +111,10 @@ def full(specfile: pathlib.Path):
             .expanduser()
             .resolve()
         )
+        testing_pipeline = TestingPipeline(
+            program_path, description["type"], input_path
+        )
+
         result = test_stage(
             program_path=program_path,
             program_type=descriprion["type"],
