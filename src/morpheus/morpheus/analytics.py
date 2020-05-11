@@ -7,16 +7,20 @@ import numpy as np
 class TestResult:
     def __init__(
         self,
-        data_length: int = None,
+        input_line_size: int = None,
+        input_byte_size: int = None,
+        output_line_size: int = None,
+        output_byte_size: int = None,
         times: List[float] = None,
-        size: int = None,
         avg_freq: int = None,
         executable_path: Path = None,
         test_file_path: Path = None,
     ):
-        self.data_length = data_length
+        self.input_line_size = input_line_size
+        self.input_byte_size = input_byte_size
+        self.output_line_size = output_line_size
+        self.output_byte_size = output_byte_size
         self.times = np.array(times)
-        self.size = sizedd
         self._analyzer = TimesAnalyzer(self.times)
         self.stats = self._analyzer.stats
         self.stats_95 = self._analyzer.stats_95
@@ -27,7 +31,11 @@ class TestResult:
         self.flop = self.stats_95.mean * avg_freq
 
     def __str__(self):
-        return f"TestResult[length={self.data_length} mean={self.stats_99.mean=:.06f} size={self.size}]"
+        return (
+            f"TestResult[length={self.input_line_size} "
+            f"mean={self.stats_99.mean:.06f} "
+            f"size={self.output_line_size}]"
+        )
 
     __repr__ = __str__
 

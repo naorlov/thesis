@@ -15,7 +15,7 @@ def main():
     cli = CLI(
         executable_path=args.executable,
         type=args.type,
-        input_path=args.input_path,
+        input_path=args._input_path,
         input_template=args.input_template,
         test_result_path=args.test_result_path,
         count=args.count,
