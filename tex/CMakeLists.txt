@@ -1,3 +1,8 @@
+file(GLOB_RECURSE texfile RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CONFIGURE_DEPENDS "*.tex" "*.sty" "*.bib")
+foreach( sourcefile IN LISTS texfile )
+    configure_file(${sourcefile} ${sourcefile})
+endforeach()
+
 add_custom_target(
     proposal_pdf
     ALL
@@ -18,17 +23,25 @@ add_custom_target(
     COMMAND cp proposal_presentation.pdf ${CMAKE_SOURCE_DIR}/pdf
 )
 
-file(GLOB_RECURSE texfile RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CONFIGURE_DEPENDS "*.tex" "*.sty" "*.bib")
-foreach( sourcefile IN LISTS texfile )
-    configure_file(${sourcefile} ${sourcefile})
-endforeach()
 
 add_custom_target(
-    diploma_pdf
+    thesis
     ALL
-    COMMAND pdflatex -interaction=nonstopmode diploma.tex || (exit 0)
-    COMMAND bibtex diploma || (exit 0)
-    COMMAND pdflatex -interaction=nonstopmode diploma.tex || (exit 0)
-    COMMAND pdflatex -interaction=nonstopmode diploma.tex || (exit 0)
-    COMMAND cp diploma.pdf ${CMAKE_SOURCE_DIR}/pdf
+    COMMAND pdflatex -interaction=nonstopmode thesis.tex || (exit 0)
+    COMMAND bibtex thesis || (exit 0)
+    COMMAND pdflatex -interaction=nonstopmode thesis.tex || (exit 0)
+    COMMAND pdflatex -interaction=nonstopmode thesis.tex || (exit 0)
+    COMMAND cp thesis.pdf ${CMAKE_SOURCE_DIR}/pdf
 )
+
+
+add_custom_target(
+    report
+    ALL
+    COMMAND pdflatex -interaction=nonstopmode report.tex || (exit 0)
+    COMMAND bibtex report || (exit 0)
+    COMMAND pdflatex -interaction=nonstopmode report.tex || (exit 0)
+    COMMAND pdflatex -interaction=nonstopmode report.tex || (exit 0)
+    COMMAND cp report.pdf ${CMAKE_SOURCE_DIR}/pdf
+)
+

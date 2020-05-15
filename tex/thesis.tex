@@ -33,22 +33,33 @@
 \let\newdate\@date
 \makeatother
 
-\linespread{1.3}
+\linespread{1.5}
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    left=25mm,
+    top=15mm, 
+    bottom=15mm,
+    right=15mm
+}
+
+\usepackage[backend=bibtex, sorting=none]{biblatex}
+
+\addbibresource{bibliography.bib}
+
+\newcommand*{\TODO}[1]{{\color{red}{TODO: \textit{#1}}}}
+
+\usepackage{subfiles}
 
 \begin{document}
-    \input{sections/titlepage.tex}
+    \input{sections/thesis_titlepage.tex}
     
     \pagestyle{plain}
     \tableofcontents
     
     \newpage
 
-    \section{Введение}\label{sec:introduction}
-
-    \subsection{Актуальность}\label{sec:relevance}
-
-    \subsection{Цели и задачи}\label{sec:goals}
-
+    \subfile{sections/thesis/introduction.tex}
     \newpage
 
     \section{О MapReduce}\label{sec:whatismapred}
