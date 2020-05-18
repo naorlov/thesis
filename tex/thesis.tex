@@ -1,7 +1,12 @@
 \documentclass[a4paper,12pt]{article}
-\usepackage{header}
-\usepackage{hyperref}
 
+\usepackage{cmap}                   % Поиск по кириллице
+\usepackage{mathtext}               % Кириллица в формулах
+\usepackage[T1,T2A]{fontenc}        % Кодировки шрифтов
+\usepackage[utf8]{inputenc}         % Кодировка текста
+\usepackage[english,russian]{babel} % Подключение поддержки языков
+\usepackage{hyperref}
+\usepackage{hyphenat}
  % Цвета для гиперссылок
 \usepackage{xcolor}
 \usepackage{floatflt}
@@ -22,11 +27,14 @@
 % hack for список литературы
 \usepackage{etoolbox}
 \patchcmd{\thebibliography}{\section*}{\section}{}{}
-\fancyhf{}
-\fancyhead[R]{\head}
-\fancyhead[L]{\thepage}
+\fancyhf{} 
+% \fancyhead[R]{\head}
+% \fancyhead[]{\thepage}
 
-\def\baselinestretch{1}
+% \def\baselinestretch{1}`'
+
+\setcounter{secnumdepth}{2} 
+\setcounter{tocdepth}{2}
 
 \makeatletter
 \let\newtitle\@title
@@ -51,6 +59,21 @@
 
 \usepackage{subfiles}
 
+\usepackage{listings}
+\usepackage{xcolor} % for setting colors
+
+% set the default code style
+\lstset{
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+
+
 \begin{document}
     \input{sections/thesis_titlepage.tex}
     
@@ -58,48 +81,26 @@
     \tableofcontents
     
     \newpage
-
-    \subfile{sections/thesis/introduction.tex}
+    
+    \subfile{sections/thesis/000_annotation.tex}
+    \newpage 
+    
+    \subfile{sections/thesis/010_introduction.tex}
     \newpage
 
-    \section{О MapReduce}\label{sec:whatismapred}
-
+    \subfile{sections/thesis/020_about.tex}
     \newpage
     
-    \section{Технологии симуляции}
-
-    \subsection{ROSS}
-
-    \subsection{CODES}
-
-    \subsection{SimGrid}
-
+    \subfile{sections/thesis/030_simulation_methods.tex}
     \newpage
-
-    \section{Обзор существующих решений}
     
-    \subsection{MRSim}
-
-    \subsection{MRperf}
-
-    \subsection{MRSG}
-
-    \subsection{YarnSim}
-
-    \subsection{Mumak}
-
-    \subsection{BTeHadoop2}
-
+    \subfile{sections/thesis/040_simulation_technology.tex}
     \newpage
 
-    \section{Мой вклад}
+    \subfile{sections/thesis/050_review.tex}
+    \newpage
 
-    \subsection{Архитектура}
-
-    \subsection{Особенности}
-
-    \subsection{Работа с симулятором}
-
+    \subfile{sections/thesis/060_results.tex}
     \newpage
 
     \section{Тестирование}
@@ -111,5 +112,8 @@
     \newpage
 
     \printbibliography
+
+    \newpage
+    \subfile{sections/thesis/900_appendix_1.tex}
 
 \end{document}

@@ -1,0 +1,29 @@
+\documentclass[../../thesis.tex]{subfile}
+
+
+\begin{document}
+    \section{Приложения}
+
+    \begin{lstlisting}[label={lst:specfile}, caption={Конфигурационный файл}]
+version: 1
+
+simulation:
+  mapper:
+    input_size: 100000000
+
+stages:
+  mapper:
+    type: mapper
+    executable: ./mapper
+    input: ./mapper_input_sample
+  reducer:
+    type: reducer
+    after: mapper
+    executable: ./reducer
+    input: ./reducer_input_sample
+    \end{lstlisting}
+
+
+\end{document}
+
+
