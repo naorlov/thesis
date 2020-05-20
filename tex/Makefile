@@ -41,12 +41,12 @@ presentation:
 .ONESHELL:
 thesis:
 	mkdir -p build 
-	cp -r thesis.tex bibliography.bib sections build
+	cp -r thesis.tex bibliography.bib  sections build
 	cd build
-	pdflatex -interaction=nonstopmode thesis.tex 1> pdflatex_1.logs
+	pdflatex -interaction=nonstopmode -shell-escape thesis.tex 1> pdflatex_1.logs
 	bibtex thesis 1> bibtex.logs
-	pdflatex -interaction=nonstopmode thesis.tex 1> pdflatex_2.logs
-	pdflatex -interaction=nonstopmode thesis.tex 1> pdflatex_3.logs
+	pdflatex -interaction=nonstopmode -shell-escape thesis.tex 1> pdflatex_2.logs
+	pdflatex -interaction=nonstopmode -shell-escape thesis.tex 1> pdflatex_3.logs
 	cd ..
 	cp build/thesis.pdf .
 

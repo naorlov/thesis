@@ -1,3 +1,4 @@
+% spellchecker: disable
 \documentclass[a4paper,12pt]{article}
 
 \usepackage{cmap}                   % Поиск по кириллице
@@ -41,7 +42,7 @@
 \let\newdate\@date
 \makeatother
 
-\linespread{1.5}
+\linespread{1.3}
 \usepackage{geometry}
 \geometry{
     a4paper,
@@ -73,42 +74,49 @@
     stringstyle=\color{red} % string color
 }
 
+\makeatletter
+\providecommand*{\input@path}{}
+\g@addto@macro
+    \input@path{
+        {./sections//}
+        {./sections/thesis//}
+        {./sections/thesis/literature_review//}
+    }
+\makeatother
+
+\usepackage{titlesec}
+    
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\usepackage{minted}
 
 \begin{document}
-    \input{sections/thesis_titlepage.tex}
-    
+    \input{./sections/thesis_titlepage.tex}
+    \newpage
+
     \pagestyle{plain}
+
     \tableofcontents
     
     \newpage
     
-    \subfile{sections/thesis/000_annotation.tex}
+    \subfile{./sections/thesis/000_annotation.tex}
     \newpage 
     
     \subfile{sections/thesis/010_introduction.tex}
     \newpage
 
-    \subfile{sections/thesis/020_about.tex}
-    \newpage
-    
-    \subfile{sections/thesis/030_simulation_methods.tex}
-    \newpage
-    
-    \subfile{sections/thesis/040_simulation_technology.tex}
-    \newpage
-
-    \subfile{sections/thesis/050_review.tex}
+    \subfile{sections/thesis/020_literature_review.tex}
     \newpage
 
     \subfile{sections/thesis/060_results.tex}
     \newpage
 
-    \section{Тестирование}
-
+    \subfile{sections/thesis/070_testing.tex}
     \newpage
 
-    \section{Заключение}
-
+    \subfile{sections/thesis/080_conclusion.tex}
     \newpage
 
     \printbibliography
