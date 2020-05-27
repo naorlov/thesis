@@ -1,0 +1,158 @@
+\documentclass[../../thesis.tex]{subfile}
+
+
+\begin{document}
+    \section{Приложения}
+
+    \begin{figure}[H]
+    \begin{minted}[
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        fontsize=\footnotesize,
+        linenos
+    ]{yaml}
+    version: 1
+
+    simulation:
+    mapper:
+        input_size: 100000000
+
+    stages:
+    mapper:
+        type: mapper
+        executable: ./mapper
+        input: ./mapper_input_sample
+    reducer:
+        type: reducer
+        after: mapper
+        executable: ./reducer
+        input: ./reducer_input_sample
+    \end{minted}
+
+    \caption{Файл конфигурации MapReduce-задания}
+    \label{lst:specfile}
+    \end{figure}
+    
+    \begin{figure}[H]
+    \begin{minted}[
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        fontsize=\footnotesize,
+        linenos
+    ]{yaml}
+    mapper:
+    space:
+        degree: 2
+        logarithmic_part:
+        - -0.14228538552684603
+        - -3.7133015402812664e-07
+        polynomial_part:
+        - -0.02067886279830955
+        - 1.0000061165397718
+    time:
+        degree: 2
+        logarithmic_part:
+        - 1481045.0207754164
+        - 18.673089555173647
+        polynomial_part:
+        - 217330.2010094871
+        - 1352.8590553542927
+    \end{minted}
+    \caption{Файл результатов тестирования}
+    \label{lst:resultfile}
+    \end{figure}
+
+    \begin{figure}[H]
+    \begin{minted}[
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        fontsize=\footnotesize,
+        linenos
+    ]{cpp}
+    #include <iostream>
+    #include <stdexcept>
+    #include <string>
+
+    int main()
+    {
+        std::cin.tie(nullptr);
+        std::ios_base::sync_with_stdio(false);
+
+        for (std::string line; std::getline(std::cin, line);)
+        {
+            int current_word_start = 0;
+            for (size_t i = 0; i != line.size(); ++i)
+            {
+                if (std::isspace(line[i]))
+                {
+                    if (current_word_start == i || line[i] == '\n')
+                    {
+                        current_word_start = i + 1;
+                        continue;
+                    }
+                    auto result = std::string(
+                        line.begin() + current_word_start, line.begin() + i);
+                    std::cout << result << " 1\n";
+                    current_word_start = i + 1;
+                }
+            }
+            if (line.begin() + current_word_start != line.end())
+            {
+                auto result = std::string(
+                    line.begin() + current_word_start, line.end());
+                std::cout << result << " 1\n";
+            }
+        }
+        std::cout.flush();
+        return 0;
+    }
+    \end{minted}
+    \caption{Map-задание приложения Wordcount}
+    \label{lst:wordcount_mapper}
+    \end{figure}
+
+
+    \begin{figure}[H]
+    \begin{minted}[
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        fontsize=\footnotesize,
+        linenos
+    ]{cpp}
+    #include <iostream>
+    #include <map>
+    #include <stdexcept>
+    #include <string>
+
+    int main()
+    {
+        std::map<std::string, int> result;
+
+        std::string key;
+        int count;
+
+        while (std::cin >> key >> count)
+        {
+            result[key] += count;
+        }
+
+        for (auto [key, value] : result)
+        {
+            std::cout << key << " " << value << "\n";
+        }
+        std::cout.flush();
+        return 0;
+    }
+
+    \end{minted}
+    \caption{Reduce-задание приложения Wordcount}
+    \label{lst:wordcount_reducer}
+    \end{figure}
+
+\end{document}
+
+

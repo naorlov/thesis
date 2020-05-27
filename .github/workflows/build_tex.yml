@@ -15,8 +15,6 @@ jobs:
         texlive-pictures texlive-lang-cyrillic texlive-science texlive-generic-extra
     - name: Build latex
       run: |
-        mkdir _build
         cd tex
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory ../_build diploma.tex
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory ../_build diploma.tex
+        make all
         cd ..
